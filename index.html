@@ -47,16 +47,27 @@
 
             <!-- Mind Map — Where your attention went -->
             <div class="tile tile-mind-map" id="tile-mind-map">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🧠</span>
                     <h3 class="tile-title">Onde Sua Mente Esteve</h3>
                     <span class="tile-badge">hoje</span>
                 </div>
                 <canvas id="canvas-mindmap" class="tile-canvas"></canvas>
+                <div class="tile-resize-handle"></div>
             </div>
 
             <!-- Spotify Widget -->
             <div class="tile tile-spotify" id="tile-spotify">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🎧</span>
                     <h3 class="tile-title">Música</h3>
@@ -75,10 +86,16 @@
                     </div>
                 </div>
                 <div class="genre-tags" id="genre-tags"></div>
+                <div class="tile-resize-handle"></div>
             </div>
 
             <!-- YouTube Widget — Total Access -->
             <div class="tile tile-youtube" id="tile-youtube">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">▶️</span>
                     <h3 class="tile-title">YouTube Algorithm</h3>
@@ -112,20 +129,32 @@
                 <div class="yt-expanded-footer" id="yt-summary">
                     Conecte para ver sua dieta intelectual e mood atual.
                 </div>
+                <div class="tile-resize-handle"></div>
             </div>
 
             <!-- Reading Widget — Refactored -->
             <div class="tile tile-reading" id="tile-reading">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">📚</span>
                     <h3 class="tile-title">Biblioteca & Leituras</h3>
                     <span class="tile-badge">estante</span>
                 </div>
                 <div class="book-list" id="book-list"></div>
+                <div class="tile-resize-handle"></div>
             </div>
 
             <!-- Movie Widget — NEW -->
             <div class="tile tile-movies" id="tile-movies">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🎬</span>
                     <h3 class="tile-title">Cinema e Séries</h3>
@@ -135,10 +164,16 @@
                     <!-- Future connection -->
                     <p class="placeholder-text">Aguardando conexão com Letterboxd/Trakt...</p>
                 </div>
+                <div class="tile-resize-handle"></div>
             </div>
 
             <!-- Navigation Widget -->
             <div class="tile tile-navigation" id="tile-navigation">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🧭</span>
                     <h3 class="tile-title">Fluxo de Navegação</h3>
@@ -177,6 +212,11 @@
 
             <!-- Photos & Experiences Widget — NEW -->
             <div class="tile tile-photos" id="tile-photos">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🖼️</span>
                     <h3 class="tile-title">Memórias e Viagens</h3>
@@ -189,6 +229,11 @@
 
             <!-- World Map Tracking — NEW -->
             <div class="tile tile-map" id="tile-map">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🌍</span>
                     <h3 class="tile-title">World Tracking</h3>
@@ -202,6 +247,11 @@
 
             <!-- Focus Widget -->
             <div class="tile tile-focus" id="tile-focus">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
                 <div class="tile-header">
                     <span class="tile-icon">⏱️</span>
                     <h3 class="tile-title">Foco</h3>
@@ -217,6 +267,62 @@
                         <span class="focus-lbl">distrações</span>
                     </div>
                 </div>
+            <!-- Instagram Widget -->
+            <div class="tile tile-instagram" id="tile-instagram">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
+                <div class="tile-header">
+                    <span class="tile-icon">📸</span>
+                    <h3 class="tile-title">Instagram</h3>
+                </div>
+                <p class="placeholder-text">Conecte sua conta para ver métricas de engajamento...</p>
+            </div>
+
+            <!-- TikTok Widget -->
+            <div class="tile tile-tiktok" id="tile-tiktok">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
+                <div class="tile-header">
+                    <span class="tile-icon">📱</span>
+                    <h3 class="tile-title">TikTok</h3>
+                </div>
+                <p class="placeholder-text">Sincronizando tendências e visualizações...</p>
+            </div>
+
+            <!-- X Widget -->
+            <div class="tile tile-x" id="tile-x">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
+                <div class="tile-header">
+                    <span class="tile-icon">🐦</span>
+                    <h3 class="tile-title">X (Twitter)</h3>
+                </div>
+                <p class="placeholder-text">Monitorando sua bolha e alcance...</p>
+            </div>
+
+            <!-- Images Widget — NEW -->
+            <div class="tile tile-gallery" id="tile-gallery">
+                <div class="tile-controls">
+                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
+                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
+                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
+                </div>
+                <div class="tile-header">
+                    <span class="tile-icon">🖼️</span>
+                    <h3 class="tile-title">Coleção de Imagens</h3>
+                </div>
+                <div class="gallery-placeholder">
+                    <p class="placeholder-text">Arraste ou anexe imagens para seu board...</p>
+                </div>
             </div>
 
         </section>
@@ -226,8 +332,8 @@
     <!-- Bottom Toolbar (own.page style) -->
     <div class="toolbar-container" id="toolbar-container">
 
-        <!-- Expanded Panel -->
-        <div class="toolbar-panel" id="toolbar-panel" data-open="false">
+        <!-- Design Panel -->
+        <div class="toolbar-panel" id="panel-design" data-open="false">
             <div class="toolbar-panel-header">
                 <h3>Design</h3>
             </div>
@@ -266,7 +372,7 @@
                         <div class="preview-sub" style="color: #2A6843;">seu algoritmo...</div>
                     </div>
                 </div>
-                <div class="theme-card" data-theme-id="frosty">
+                <div class="theme-card active" data-theme-id="frosty">
                     <span class="theme-label">frosty</span>
                     <div class="theme-preview" style="background-color: #132533;">
                         <div class="preview-avatar"></div>
@@ -277,14 +383,79 @@
             </div>
         </div>
 
+        <!-- Widgets Panel -->
+        <div class="toolbar-panel" id="panel-widgets" data-open="false">
+            <div class="toolbar-panel-header">
+                <h3>Gerenciar Widgets</h3>
+            </div>
+            <div class="widget-manager-list" id="widget-manager-list">
+                <button class="widget-manager-btn active" data-widget-id="tile-mind-map">
+                    <div class="widget-icon-bg">🧠</div>
+                    <span class="widget-label">Mind Map</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-spotify">
+                    <div class="widget-icon-bg">🎧</div>
+                    <span class="widget-label">Spotify</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-youtube">
+                    <div class="widget-icon-bg">▶️</div>
+                    <span class="widget-label">YouTube</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-reading">
+                    <div class="widget-icon-bg">📚</div>
+                    <span class="widget-label">Leitura</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-movies">
+                    <div class="widget-icon-bg">🎬</div>
+                    <span class="widget-label">Cinema</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-navigation">
+                    <div class="widget-icon-bg">🧭</div>
+                    <span class="widget-label">Navegação</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-agenda">
+                    <div class="widget-icon-bg">📅</div>
+                    <span class="widget-label">Agenda</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-photos">
+                    <div class="widget-icon-bg">🖼️</div>
+                    <span class="widget-label">Fotos</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-map">
+                    <div class="widget-icon-bg">🌍</div>
+                    <span class="widget-label">Mapa</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-focus">
+                    <div class="widget-icon-bg">⏱️</div>
+                    <span class="widget-label">Foco</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-instagram">
+                    <div class="widget-icon-bg">📸</div>
+                    <span class="widget-label">Instagram</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-tiktok">
+                    <div class="widget-icon-bg">📱</div>
+                    <span class="widget-label">TikTok</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-x">
+                    <div class="widget-icon-bg">🐦</div>
+                    <span class="widget-label">X</span>
+                </button>
+                <button class="widget-manager-btn active" data-widget-id="tile-gallery">
+                    <div class="widget-icon-bg">🖼️</div>
+                    <span class="widget-label">Imagens</span>
+                </button>
+            </div>
+        </div>
+
         <!-- Toolbar Buttons -->
         <div class="toolbar-bar" id="toolbar-bar">
             <button class="toolbar-btn active" id="btn-design" aria-label="Design" title="Design">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"></path></svg>
             </button>
             <div class="toolbar-divider"></div>
-            <button class="toolbar-btn" id="btn-share" aria-label="Compartilhar" title="Compartilhar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M229.66,109.66l-48,48a8,8,0,0,1-11.32-11.32L204.69,112H165a88.1,88.1,0,0,0-85,65.32,8,8,0,0,1-15.5-4.08A104.12,104.12,0,0,1,165,96h39.71L170.34,61.66a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,109.66ZM192,208H40V88a8,8,0,0,0-16,0V208a16,16,0,0,0,16,16H192a8,8,0,0,0,0-16Z"></path></svg>
+            <button class="toolbar-btn" id="btn-widgets" aria-label="Layout" title="Gerenciar Widgets">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M104,40V96a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8H96A8,8,0,0,1,104,40ZM96,152H40a8,8,0,0,0-8,8v56a8,8,0,0,0,8,8H96a8,8,0,0,0,8-8V160A8,8,0,0,0,96,152Zm120-48H160a8,8,0,0,0-8,8v56a8,8,0,0,0,8,8h56a8,8,0,0,0,8-8V112A8,8,0,0,0,216,104Zm0-72H160a8,8,0,0,0-8,8V96a8,8,0,0,0,8,8h56a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32Z"></path></svg>
             </button>
             <button class="toolbar-btn" id="btn-data" aria-label="Dados" title="Importar Dados">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M248,128a87.34,87.34,0,0,1-17.6,52.81,8,8,0,1,1-12.8-9.62A71.34,71.34,0,0,0,232,128a72,72,0,0,0-144,0,8,8,0,0,1-16,0,88,88,0,0,1,176,0ZM128,88a40,40,0,0,0-9.76,78.79L102.59,204.1a8,8,0,0,0,6.09,9.45,7.7,7.7,0,0,0,1.68.18,8,8,0,0,0,7.78-6.26l16.42-38.94A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152ZM72,128a8,8,0,0,0-8-8H48a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128Z"></path></svg>
