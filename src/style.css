@@ -349,10 +349,38 @@ body {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    .main-container {
+        padding: 30px 16px 140px;
+    }
+
     .dashboard-grid {
         grid-template-columns: 1fr;
         grid-auto-rows: auto;
+        gap: 12px;
+    }
+
+    /* Force mobile widgets to take full width regardless of desktop size logic */
+    .tile, 
+    .tile.size-wide, 
+    .tile.size-tall, 
+    .tile.size-large,
+    .tile-mind-map,
+    .tile-spotify,
+    .tile-youtube,
+    .tile-reading,
+    .tile-navigation {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+        min-height: 180px;
+        padding: 20px;
+    }
+
+    .tile-controls {
+        opacity: 1 !important; /* Always visible on mobile since no hover */
+        transform: none !important;
+        top: 10px;
+        right: 10px;
     }
 }
 
@@ -1091,14 +1119,32 @@ body {
 /* ---- TOOLBAR ---- */
 .toolbar-container {
     position: fixed;
-    bottom: 28px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10000;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    width: 100%;
+    padding: 0 16px;
+    pointer-events: none;
+}
+
+.toolbar-bar, .toolbar-panel {
+    pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+    .toolbar-container {
+        bottom: 16px;
+    }
+    
+    .toolbar-panel {
+        width: calc(100vw - 32px);
+        max-height: 70vh;
+    }
 }
 
 .toolbar-panel {
@@ -1384,6 +1430,13 @@ body {
     overflow-y: auto;
 }
 
+@media (max-width: 480px) {
+    .widget-manager-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+}
+
 .widget-manager-btn {
     display: flex;
     flex-direction: column;
@@ -1465,7 +1518,7 @@ body {
     box-shadow: 0 50px 100px rgba(0,0,0,0.5) !important;
     z-index: 10000 !important;
     opacity: 1 !important; /* Fully opaque while dragging */
-    transform: rotate(1.5deg) scale(1.05) !important;
+    transform: scale(1.05) !important; /* Tilt removed */
     transition: none !important;
     background: var(--bg-tile) !important;
     border-color: var(--accent) !important;
