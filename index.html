@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ceres">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owngorithm — Seu Algoritmo Pessoal</title>
+    <meta name="description" content="Visualize seu algoritmo pessoal. Descubra seus padrões de consumo de conteúdo, música, vídeos e navegação.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+    <!-- Noise overlay -->
+    <div class="noise-overlay"></div>
+
+    <main class="main-container">
+
+        <!-- Profile Sidebar -->
+        <aside class="profile-sidebar" id="profile-sidebar">
+            <div class="profile-avatar">
+                <img src="https://images.own.page/6d0215e5-7d67-4072-a610-01caaa11516f/Z3V8aUzGUznQKjUVC2jCA2uCZ7dEup9ckGcx4etJVVS6pxgcodJ.jpg" alt="Matheus Roque" id="profile-img">
+            </div>
+            <h1 class="profile-name">Matheus Roque</h1>
+            <p class="profile-bio">Seu algoritmo pessoal</p>
+            <div class="profile-stats">
+                <div class="stat">
+                    <span class="stat-number" id="stat-hours">47</span>
+                    <span class="stat-label">horas rastreadas</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="stat-sources">6</span>
+                    <span class="stat-label">fontes ativas</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Dashboard Grid -->
+        <section class="dashboard-grid" id="dashboard">
+
+            <!-- Mind Map — Where your attention went -->
+            <div class="tile tile-mind-map" id="tile-mind-map">
+                <div class="tile-header">
+                    <span class="tile-icon">🧠</span>
+                    <h3 class="tile-title">Onde Sua Mente Esteve</h3>
+                    <span class="tile-badge">hoje</span>
+                </div>
+                <canvas id="canvas-mindmap" class="tile-canvas"></canvas>
+            </div>
+
+            <!-- Spotify Widget -->
+            <div class="tile tile-spotify" id="tile-spotify">
+                <div class="tile-header">
+                    <span class="tile-icon">🎧</span>
+                    <h3 class="tile-title">Música</h3>
+                </div>
+                <div class="spotify-now-playing" id="spotify-now">
+                    <div class="album-art" id="album-art"></div>
+                    <div class="track-info">
+                        <span class="track-name" id="track-name">Retrowave</span>
+                        <span class="track-artist" id="track-artist">Synthwave Mix</span>
+                    </div>
+                    <div class="eq-bars">
+                        <span class="eq-bar"></span>
+                        <span class="eq-bar"></span>
+                        <span class="eq-bar"></span>
+                        <span class="eq-bar"></span>
+                    </div>
+                </div>
+                <div class="genre-tags" id="genre-tags"></div>
+            </div>
+
+            <!-- YouTube Widget -->
+            <div class="tile tile-youtube" id="tile-youtube">
+                <div class="tile-header">
+                    <span class="tile-icon">▶️</span>
+                    <h3 class="tile-title">Vídeos</h3>
+                    <span class="tile-badge">esta semana</span>
+                </div>
+                <canvas id="canvas-youtube" class="tile-canvas"></canvas>
+                <div class="youtube-stat">
+                    <span class="big-number" id="yt-hours">12.4</span>
+                    <span class="big-label">horas assistidas</span>
+                </div>
+            </div>
+
+            <!-- Reading Widget -->
+            <div class="tile tile-reading" id="tile-reading">
+                <div class="tile-header">
+                    <span class="tile-icon">📚</span>
+                    <h3 class="tile-title">Leitura</h3>
+                </div>
+                <div class="book-list" id="book-list"></div>
+            </div>
+
+            <!-- Navigation Widget -->
+            <div class="tile tile-navigation" id="tile-navigation">
+                <div class="tile-header">
+                    <span class="tile-icon">🧭</span>
+                    <h3 class="tile-title">Navegação</h3>
+                    <span class="tile-badge">7 dias</span>
+                </div>
+                <canvas id="canvas-navigation" class="tile-canvas"></canvas>
+            </div>
+
+            <!-- Intention / Goal Widget -->
+            <div class="tile tile-intention" id="tile-intention">
+                <div class="tile-header">
+                    <span class="tile-icon">🎯</span>
+                    <h3 class="tile-title">Algoritmo de Intenção</h3>
+                </div>
+                <div class="intention-content">
+                    <p class="intention-goal" id="intention-goal">Aprender IA e Machine Learning</p>
+                    <div class="intention-bar-container">
+                        <div class="intention-bar" id="intention-bar"></div>
+                    </div>
+                    <div class="intention-meta">
+                        <span class="intention-pct" id="intention-pct">68%</span>
+                        <span class="intention-label">do seu conteúdo alinhado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap Widget -->
+            <div class="tile tile-heatmap" id="tile-heatmap">
+                <div class="tile-header">
+                    <span class="tile-icon">🔥</span>
+                    <h3 class="tile-title">Atividade</h3>
+                    <span class="tile-badge">365 dias</span>
+                </div>
+                <canvas id="canvas-heatmap" class="tile-canvas"></canvas>
+            </div>
+
+            <!-- Focus Widget -->
+            <div class="tile tile-focus" id="tile-focus">
+                <div class="tile-header">
+                    <span class="tile-icon">⏱️</span>
+                    <h3 class="tile-title">Foco</h3>
+                </div>
+                <canvas id="canvas-focus" class="tile-canvas"></canvas>
+                <div class="focus-stats" id="focus-stats">
+                    <div class="focus-item">
+                        <span class="focus-val" id="focus-productive">5.2h</span>
+                        <span class="focus-lbl">produtivo</span>
+                    </div>
+                    <div class="focus-item">
+                        <span class="focus-val" id="focus-distracted">2.1h</span>
+                        <span class="focus-lbl">distrações</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Bottom Toolbar (own.page style) -->
+    <div class="toolbar-container" id="toolbar-container">
+
+        <!-- Expanded Panel -->
+        <div class="toolbar-panel" id="toolbar-panel" data-open="false">
+            <div class="toolbar-panel-header">
+                <h3>Design</h3>
+            </div>
+
+            <!-- Theme Carousel -->
+            <div class="theme-carousel" id="theme-carousel">
+                <div class="theme-card" data-theme-id="ceres">
+                    <span class="theme-label">ceres</span>
+                    <div class="theme-preview" style="background-color: #F6F4EF;">
+                        <div class="preview-avatar"></div>
+                        <div class="preview-title" style="color: #686259;">Owngorithm</div>
+                        <div class="preview-sub" style="color: #716B62;">seu algoritmo...</div>
+                    </div>
+                </div>
+                <div class="theme-card" data-theme-id="charon">
+                    <span class="theme-label">charon</span>
+                    <div class="theme-preview" style="background-color: #1B1B1B; border: 2px solid #AF9986;">
+                        <div class="preview-avatar"></div>
+                        <div class="preview-title" style="color: #AD8857;">Owngorithm</div>
+                        <div class="preview-sub" style="color: #AF9986;">seu algoritmo...</div>
+                    </div>
+                </div>
+                <div class="theme-card" data-theme-id="mars">
+                    <span class="theme-label">mars</span>
+                    <div class="theme-preview" style="background-color: #2D2824;">
+                        <div class="preview-avatar"></div>
+                        <div class="preview-title" style="color: #FF833A;">Owngorithm</div>
+                        <div class="preview-sub" style="color: #A49283;">seu algoritmo...</div>
+                    </div>
+                </div>
+                <div class="theme-card" data-theme-id="earth">
+                    <span class="theme-label">earth</span>
+                    <div class="theme-preview" style="background-color: #F6FFF4;">
+                        <div class="preview-avatar"></div>
+                        <div class="preview-title" style="color: #0B2B1C;">Owngorithm</div>
+                        <div class="preview-sub" style="color: #2A6843;">seu algoritmo...</div>
+                    </div>
+                </div>
+                <div class="theme-card" data-theme-id="frosty">
+                    <span class="theme-label">frosty</span>
+                    <div class="theme-preview" style="background-color: #132533;">
+                        <div class="preview-avatar"></div>
+                        <div class="preview-title" style="color: #649CC7;">Owngorithm</div>
+                        <div class="preview-sub" style="color: #D6F2FF;">seu algoritmo...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar Buttons -->
+        <div class="toolbar-bar" id="toolbar-bar">
+            <button class="toolbar-btn active" id="btn-design" aria-label="Design" title="Design">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"></path></svg>
+            </button>
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn" id="btn-share" aria-label="Compartilhar" title="Compartilhar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M229.66,109.66l-48,48a8,8,0,0,1-11.32-11.32L204.69,112H165a88.1,88.1,0,0,0-85,65.32,8,8,0,0,1-15.5-4.08A104.12,104.12,0,0,1,165,96h39.71L170.34,61.66a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,109.66ZM192,208H40V88a8,8,0,0,0-16,0V208a16,16,0,0,0,16,16H192a8,8,0,0,0,0-16Z"></path></svg>
+            </button>
+            <button class="toolbar-btn" id="btn-data" aria-label="Dados" title="Importar Dados">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M248,128a87.34,87.34,0,0,1-17.6,52.81,8,8,0,1,1-12.8-9.62A71.34,71.34,0,0,0,232,128a72,72,0,0,0-144,0,8,8,0,0,1-16,0,88,88,0,0,1,176,0ZM128,88a40,40,0,0,0-9.76,78.79L102.59,204.1a8,8,0,0,0,6.09,9.45,7.7,7.7,0,0,0,1.68.18,8,8,0,0,0,7.78-6.26l16.42-38.94A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152ZM72,128a8,8,0,0,0-8-8H48a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128Z"></path></svg>
+            </button>
+            <button class="toolbar-btn" id="btn-fullscreen" aria-label="Tela Cheia" title="Tela Cheia">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H208V208Zm-32-80a8,8,0,0,1-8,8H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32A8,8,0,0,1,176,128Z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
