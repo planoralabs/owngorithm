@@ -34,6 +34,16 @@ export const youtubeData = {
         { name: 'Design', hours: 1.8, color: null },
         { name: 'Outros', hours: 1.3, color: null },
     ],
+    topChannels: [
+        { name: 'Fireship', subscribers: '3.1M', alignment: 'High' },
+        { name: 'Lex Fridman', subscribers: '3.9M', alignment: 'Medium' },
+        { name: 'The Cherno', subscribers: '500K', alignment: 'High' },
+        { name: 'Gary Explains', subscribers: '350K', alignment: 'Medium' },
+    ],
+    recent: [
+        { title: 'The Future of AI Agents', duration: '12:45', thumbnail: null },
+        { title: 'Clean Code in JavaScript', duration: '18:20', thumbnail: null },
+    ]
 };
 
 export const readingData = {

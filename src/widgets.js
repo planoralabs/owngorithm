@@ -94,11 +94,15 @@ export function renderMindMap() {
         // Label
         ctx.save();
         ctx.globalAlpha = 0.9;
-        const fontSize = Math.max(9, r * 0.35);
-        ctx.font = `500 ${fontSize}px Inter, sans-serif`;
+        const fontSize = Math.max(10, r * 0.32);
+        ctx.font = `600 ${fontSize}px var(--font-sans)`;
         ctx.fillStyle = getComputedThemeColor('--heading');
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        // Add a subtle white outline to text for readability over connection lines
+        ctx.strokeStyle = getComputedThemeColor('--bg-tile');
+        ctx.lineWidth = 3;
+        ctx.strokeText(b.label, x, y);
         ctx.fillText(b.label, x, y);
         ctx.restore();
     });
@@ -139,10 +143,10 @@ export function renderYoutube() {
         getComputedThemeColor('--chart-5'),
     ];
 
-    const cx = w * 0.7;
-    const cy = h * 0.5;
-    const outerR = Math.min(w * 0.25, h * 0.42);
-    const innerR = outerR * 0.6;
+    const cx = w * 0.5;
+    const cy = h * 0.4;
+    const outerR = Math.min(w * 0.35, h * 0.35);
+    const innerR = outerR * 0.65;
 
     const total = youtubeData.categories.reduce((s, c) => s + c.hours, 0);
     let startAngle = -Math.PI / 2;
@@ -158,23 +162,95 @@ export function renderYoutube() {
         ctx.fillStyle = colors[i % colors.length];
         ctx.fill();
 
-        // Label
+        // Label (only for larger slices)
         const midAngle = startAngle + sliceAngle / 2;
-        const labelR = outerR + 14;
+        const labelR = outerR + 12;
         const lx = cx + Math.cos(midAngle) * labelR;
         const ly = cy + Math.sin(midAngle) * labelR;
 
-        ctx.save();
-        ctx.font = '500 9px Inter, sans-serif';
-        ctx.fillStyle = getComputedThemeColor('--body-color');
-        ctx.textAlign = midAngle > Math.PI / 2 && midAngle < Math.PI * 1.5 ? 'right' : 'left';
-        ctx.textBaseline = 'middle';
-        ctx.globalAlpha = 0.7;
-        if (outerR > 40) ctx.fillText(cat.name, lx, ly);
-        ctx.restore();
+        if (sliceAngle > 0.15) {
+            ctx.save();
+            ctx.font = '600 10px var(--font-sans)';
+            ctx.fillStyle = getComputedThemeColor('--body-color');
+            ctx.textAlign = midAngle > Math.PI / 2 && midAngle < Math.PI * 1.5 ? 'right' : 'left';
+            ctx.textBaseline = 'middle';
+            ctx.globalAlpha = 0.8;
+            ctx.fillText(cat.name, lx, ly);
+            ctx.restore();
+        }
 
         startAngle = endAngle;
     });
+
+    renderYoutubeDetails();
+}
+
+// ---- YouTube Details (Tabbed Management) ----
+let currentYtTab = 'channels';
+
+export function renderYoutubeDetails() {
+    const container = document.getElementById('yt-channels-list');
+    const summaryEl = document.getElementById('yt-summary');
+    if (!container) return;
+    
+    // Setup Tab Listeners once
+    const tabs = document.querySelectorAll('.yt-tab');
+    tabs.forEach(tab => {
+        if (!tab.dataset.listener) {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentYtTab = tab.dataset.tab;
+                renderYoutubeDetails();
+            });
+            tab.dataset.listener = "true";
+        }
+    });
+
+    container.innerHTML = '';
+
+    if (currentYtTab === 'channels') {
+        youtubeData.topChannels.forEach(ch => {
+            const item = document.createElement('div');
+            item.className = 'yt-channel-item';
+            item.innerHTML = `
+                <div class="yt-channel-info">
+                    <span class="yt-channel-name">${ch.name}</span>
+                    <span class="yt-channel-meta">${ch.subscribers}</span>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    } else if (currentYtTab === 'recent') {
+        youtubeData.recent.forEach(v => {
+            const item = document.createElement('div');
+            item.className = 'yt-channel-item';
+            item.innerHTML = `
+                <img src="${v.thumbnail}" style="width: 32px; border-radius: 4px;">
+                <div class="yt-channel-info">
+                    <span class="yt-channel-name" style="font-size: 0.75rem">${v.title}</span>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    } else if (currentYtTab === 'playlists') {
+        youtubeData.playlists.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'yt-channel-item';
+            item.innerHTML = `
+                <span class="tile-icon" style="font-size: 0.8rem">📂</span>
+                <span class="yt-channel-name">${p}</span>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    const hoursEl = document.getElementById('yt-hours');
+    if (hoursEl) hoursEl.textContent = youtubeData.totalHours === '--' ? '--' : youtubeData.totalHours;
+
+    if (summaryEl && youtubeData.totalHours !== '--') {
+        summaryEl.textContent = `Mood: Predominantemente focado em ${youtubeData.categories[0].name} e ${youtubeData.categories[1].name}.`;
+    }
 }
 
 
@@ -185,7 +261,7 @@ export function renderNavigation() {
     const { ctx, w, h } = setup;
 
     const max = Math.max(...navigationData.categories.map(c => c.hours));
-    const barHeight = Math.min(16, (h - 8) / navigationData.categories.length - 6);
+    const barHeight = Math.max(1, Math.min(16, (h - 8) / navigationData.categories.length - 6));
     const labelWidth = 80;
     const chartWidth = w - labelWidth - 20;
 
@@ -194,17 +270,17 @@ export function renderNavigation() {
     const textColor = getComputedThemeColor('--body-color');
 
     navigationData.categories.forEach((cat, i) => {
-        const y = i * (barHeight + 8) + 4;
+        const y = i * (barHeight + 10) + 10;
         const barW = (cat.hours / max) * chartWidth;
 
         // Label
         ctx.save();
-        ctx.font = '500 10px Inter, sans-serif';
+        ctx.font = '600 11px var(--font-sans)';
         ctx.fillStyle = textColor;
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
-        ctx.globalAlpha = 0.7;
-        ctx.fillText(cat.name, labelWidth - 8, y + barHeight / 2);
+        ctx.globalAlpha = 0.8;
+        ctx.fillText(cat.name, labelWidth - 12, y + barHeight / 2);
         ctx.restore();
 
         // Background bar
@@ -288,7 +364,7 @@ export function renderFocus() {
     const positiveColor = getComputedThemeColor('--positive');
     const negativeColor = getComputedThemeColor('--negative');
     const data = focusData.breakdown;
-    const barWidth = Math.min(12, (w - 8) / data.length - 3);
+    const barWidth = Math.max(1, Math.min(12, (w - 8) / data.length - 3));
     const gap = 3;
     const totalW = data.length * (barWidth + gap);
     const offsetX = (w - totalW) / 2;
@@ -402,4 +478,15 @@ export function handleResize() {
         renderHeatmap();
         renderFocus();
     }, 200);
+}
+// ---- Update YouTube Widget with Real Data ----
+export function updateYoutubeWidget(newData) {
+    // Update the data reference
+    youtubeData.totalHours = newData.totalHours;
+    youtubeData.categories = newData.categories;
+    youtubeData.topChannels = newData.topChannels;
+    youtubeData.recent = newData.recent;
+
+    // Trigger re-render
+    renderYoutube();
 }

@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/style.css">
+    <script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
 
@@ -37,7 +38,12 @@
         </aside>
 
         <!-- Dashboard Grid -->
-        <section class="dashboard-grid" id="dashboard">
+        <section class="dashboard-grid-container">
+            <button id="btn-back" class="back-btn" aria-label="Voltar ao Dashboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path></svg>
+                <span>Dashboard</span>
+            </button>
+            <section class="dashboard-grid" id="dashboard">
 
             <!-- Mind Map — Where your attention went -->
             <div class="tile tile-mind-map" id="tile-mind-map">
@@ -71,34 +77,71 @@
                 <div class="genre-tags" id="genre-tags"></div>
             </div>
 
-            <!-- YouTube Widget -->
+            <!-- YouTube Widget — Total Access -->
             <div class="tile tile-youtube" id="tile-youtube">
                 <div class="tile-header">
                     <span class="tile-icon">▶️</span>
-                    <h3 class="tile-title">Vídeos</h3>
+                    <h3 class="tile-title">YouTube Algorithm</h3>
+                    <button id="btn-yt-connect" class="yt-connect-btn">Conectar</button>
                     <span class="tile-badge">esta semana</span>
                 </div>
-                <canvas id="canvas-youtube" class="tile-canvas"></canvas>
-                <div class="youtube-stat">
-                    <span class="big-number" id="yt-hours">12.4</span>
-                    <span class="big-label">horas assistidas</span>
+                
+                <div class="youtube-layout">
+                    <div class="youtube-chart-side">
+                        <canvas id="canvas-youtube" class="tile-canvas"></canvas>
+                    </div>
+                    
+                    <div class="youtube-details-side">
+                        <div class="youtube-stat">
+                            <span class="big-number" id="yt-hours">--</span>
+                            <span class="big-label">análise de interesse</span>
+                        </div>
+                        
+                        <div class="yt-details-content">
+                            <div class="yt-tabs">
+                                <span class="yt-tab active" data-tab="channels">Canais</span>
+                                <span class="yt-tab" data-tab="recent">Vistos</span>
+                                <span class="yt-tab" data-tab="playlists">Playlists</span>
+                            </div>
+                            <div class="yt-channels-list" id="yt-channels-list">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="yt-expanded-footer" id="yt-summary">
+                    Conecte para ver sua dieta intelectual e mood atual.
                 </div>
             </div>
 
-            <!-- Reading Widget -->
+            <!-- Reading Widget — Refactored -->
             <div class="tile tile-reading" id="tile-reading">
                 <div class="tile-header">
                     <span class="tile-icon">📚</span>
-                    <h3 class="tile-title">Leitura</h3>
+                    <h3 class="tile-title">Biblioteca & Leituras</h3>
+                    <span class="tile-badge">estante</span>
                 </div>
                 <div class="book-list" id="book-list"></div>
+            </div>
+
+            <!-- Movie Widget — NEW -->
+            <div class="tile tile-movies" id="tile-movies">
+                <div class="tile-header">
+                    <span class="tile-icon">🎬</span>
+                    <h3 class="tile-title">Cinema e Séries</h3>
+                    <span class="tile-badge">Letterboxd</span>
+                </div>
+                <div class="movies-grid" id="movies-list">
+                    <!-- Future connection -->
+                    <p class="placeholder-text">Aguardando conexão com Letterboxd/Trakt...</p>
+                </div>
             </div>
 
             <!-- Navigation Widget -->
             <div class="tile tile-navigation" id="tile-navigation">
                 <div class="tile-header">
                     <span class="tile-icon">🧭</span>
-                    <h3 class="tile-title">Navegação</h3>
+                    <h3 class="tile-title">Fluxo de Navegação</h3>
                     <span class="tile-badge">7 dias</span>
                 </div>
                 <canvas id="canvas-navigation" class="tile-canvas"></canvas>
@@ -122,14 +165,39 @@
                 </div>
             </div>
 
-            <!-- Heatmap Widget -->
-            <div class="tile tile-heatmap" id="tile-heatmap">
+            <!-- Agenda Widget (formerly Heatmap/Activity) -->
+            <div class="tile tile-agenda" id="tile-agenda">
                 <div class="tile-header">
-                    <span class="tile-icon">🔥</span>
-                    <h3 class="tile-title">Atividade</h3>
-                    <span class="tile-badge">365 dias</span>
+                    <span class="tile-icon">📅</span>
+                    <h3 class="tile-title">Agenda & Atividade</h3>
+                    <span class="tile-badge">Google Calendar</span>
                 </div>
                 <canvas id="canvas-heatmap" class="tile-canvas"></canvas>
+            </div>
+
+            <!-- Photos & Experiences Widget — NEW -->
+            <div class="tile tile-photos" id="tile-photos">
+                <div class="tile-header">
+                    <span class="tile-icon">🖼️</span>
+                    <h3 class="tile-title">Memórias e Viagens</h3>
+                    <span class="tile-badge">Google Photos</span>
+                </div>
+                <div class="photos-preview" id="photos-grid">
+                    <p class="placeholder-text">Mapa de experiências fotográficas...</p>
+                </div>
+            </div>
+
+            <!-- World Map Tracking — NEW -->
+            <div class="tile tile-map" id="tile-map">
+                <div class="tile-header">
+                    <span class="tile-icon">🌍</span>
+                    <h3 class="tile-title">World Tracking</h3>
+                    <span class="tile-badge">em breve</span>
+                </div>
+                <div class="map-placeholder">
+                    <div class="map-dot"></div>
+                    <p>Mapeando sua movimentação pelo mundo...</p>
+                </div>
             </div>
 
             <!-- Focus Widget -->
@@ -152,7 +220,8 @@
             </div>
 
         </section>
-    </main>
+    </section>
+</main>
 
     <!-- Bottom Toolbar (own.page style) -->
     <div class="toolbar-container" id="toolbar-container">

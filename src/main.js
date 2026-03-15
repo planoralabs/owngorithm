@@ -3,8 +3,9 @@
 // ============================================
 
 import './style.css';
-import { renderAllWidgets, handleResize } from './widgets.js';
+import { renderAllWidgets, handleResize, updateYoutubeWidget } from './widgets.js';
 import { loadSavedTheme, initThemeCarousel } from './themes.js';
+import { initYoutubeAuth } from './youtubeService.js';
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,6 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Stagger tile animations
     staggerTileAnimations();
+
+    // Initialize tile expansion logic
+    initTileExpansion();
+
+    // Initialize YouTube Auth
+    initYoutubeAuth((newData) => {
+        updateYoutubeWidget(newData);
+    });
 });
 
 
@@ -80,5 +89,51 @@ function staggerTileAnimations() {
     const tiles = document.querySelectorAll('.tile');
     tiles.forEach((tile, i) => {
         tile.style.animationDelay = `${0.08 * i}s`;
+    });
+}
+
+
+// ---- Tile Expansion Logic ----
+function initTileExpansion() {
+    const grid = document.getElementById('dashboard');
+    const container = document.querySelector('.dashboard-grid-container');
+    const backBtn = document.getElementById('btn-back');
+    const tiles = document.querySelectorAll('.tile');
+
+    if (!grid || !container || !backBtn) return;
+
+    tiles.forEach(tile => {
+        tile.addEventListener('click', () => {
+            // Prevent expanding if already expanded
+            if (grid.classList.contains('is-expanded')) return;
+
+            // Mark this tile as active
+            tile.classList.add('active-tile');
+            grid.classList.add('is-expanded');
+            container.classList.add('is-expanded');
+
+            // Scroll to top of grid
+            grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Re-render widgets after expansion transition
+            setTimeout(() => {
+                handleResize(); // Uses existing resize logic to recalibrate canvases
+            }, 550);
+        });
+    });
+
+    backBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent re-triggering tile click
+        
+        const activeTile = document.querySelector('.active-tile');
+        if (activeTile) activeTile.classList.remove('active-tile');
+
+        grid.classList.remove('is-expanded');
+        container.classList.remove('is-expanded');
+
+        // Re-render widgets after collapse transition
+        setTimeout(() => {
+            handleResize();
+        }, 550);
     });
 }
