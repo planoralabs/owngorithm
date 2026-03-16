@@ -288,6 +288,18 @@
                     <span class="stat-label">fontes ativas</span>
                 </div>
             </div>
+
+            <!-- Sidebar Navigation -->
+            <div class="sidebar-nav">
+                <button class="nav-item active" id="btn-nav-dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M240,128a8,8,0,0,1-8,8H136v96a8,8,0,0,1-16,0V136H24a8,8,0,0,1,0-16h96V24a8,8,0,0,1,16,0v96h96A8,8,0,0,1,240,128Z" opacity="0.2"></path><path d="M128,24a104,104,0,1,0,104,104A104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm40-88a8,8,0,0,1-8,8H136v24a8,8,0,0,1-16,0V136H96a8,8,0,0,1,0-16h24V96a8,8,0,0,1,16,0v24h24A8,8,0,0,1,168,128Z"></path></svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" id="btn-nav-settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z" opacity="0.2"></path><path d="M211,108.56A103.54,103.54,0,0,0,201.27,85l18.52-18.51a8,8,0,0,0,0-11.32L201.27,36.69a8,8,0,0,0-11.32,0L171.44,55.2a103.54,103.54,0,0,0-23.57-9.72V19.49a8,8,0,0,0-8-8h-23.75a8,8,0,0,0-8,8V45.48a103.54,103.54,0,0,0-23.57,9.72L66.05,36.69a8,8,0,0,0-11.32,0L36.21,55.2a8,8,0,0,0,0,11.32L54.73,85a103.54,103.54,0,0,0-9.73,23.56H18.49a8,8,0,0,0-8,8v23.75a8,8,0,0,0,8,8h26.51a103.54,103.54,0,0,0,9.73,23.57l-18.52,18.51a8,8,0,0,0,0,11.32l18.52,18.52a8,8,0,0,0,11.32,0l18.51-18.52a103.54,103.54,0,0,0,23.57,9.73v26.51a8,8,0,0,0,8,8h23.75a8,8,0,0,0,8-8V210.51a103.54,103.54,0,0,0,23.57-9.73l18.51,18.52a8,8,0,0,0,11.32,0l18.52-18.52a8,8,0,0,0,0-11.32L201.27,170.9a103.54,103.54,0,0,0,9.72-23.57h26.51a8,8,0,0,0,8-8v-23.75a8,8,0,0,0-8-8ZM128,176a48,48,0,1,1,48-48A48.05,48.05,0,0,1,128,176Zm96-32H198.81a88,88,0,0,1-13.84,33.43l17.79,17.78L184,214l-17.78-17.79A88,88,0,0,1,132.8,210.1v25.15h-25.15V210.1a88,88,0,0,1-33.43-13.84l-17.78,17.79L39,197.22l17.79-17.78A88,88,0,0,1,43,146H17.81v-36H43a88,88,0,0,1,13.84-33.43L39.05,58.78,56.83,41l17.78,17.79a88,88,0,0,1,33.43-13.84V19.81h36v25.15a88,88,0,0,1,33.43,13.84l17.78-17.79,17.78,17.78-17.79,17.78A88,88,0,0,1,213,110h25.15v36ZM128,96a32,32,0,1,0,32,32A32,32,0,0,0,128,96Z"></path></svg>
+                    <span>Configurações</span>
+                </button>
+            </div>
         </aside>
 
         <!-- Dashboard Grid -->
@@ -527,6 +539,86 @@
                 </div>
             </div>
 
+        </section>
+
+        <!-- Settings View (Hidden by default) -->
+        <section class="settings-view hidden" id="settings-view">
+            <header class="settings-header">
+                <h2 class="settings-title">Configurações de Fontes</h2>
+                <p class="settings-subtitle">Gerencie suas conexões e a soberania dos seus dados.</p>
+            </header>
+
+            <div class="settings-list">
+                <!-- YouTube Connect -->
+                <div class="settings-item">
+                    <div class="service-info">
+                        <span class="service-icon">▶️</span>
+                        <div class="service-details">
+                            <span class="service-name">YouTube</span>
+                            <span class="service-status disconnected" id="yt-status-label">Desconectado</span>
+                        </div>
+                    </div>
+                    <div class="service-actions">
+                        <button class="settings-btn" id="btn-settings-yt-connect">Conectar Conta</button>
+                    </div>
+                </div>
+
+                <!-- Spotify Connect -->
+                <div class="settings-item">
+                    <div class="service-info">
+                        <span class="service-icon">🎧</span>
+                        <div class="service-details">
+                            <span class="service-name">Spotify</span>
+                            <span class="service-status disconnected">Desconectado</span>
+                        </div>
+                    </div>
+                    <div class="service-actions">
+                        <button class="settings-btn">Conectar Conta</button>
+                    </div>
+                </div>
+
+                <!-- Instagram Connect -->
+                <div class="settings-item">
+                    <div class="service-info">
+                        <span class="service-icon">📸</span>
+                        <div class="service-details">
+                            <span class="service-name">Instagram</span>
+                            <span class="service-status disconnected">Em breve</span>
+                        </div>
+                    </div>
+                    <div class="service-actions">
+                        <button class="settings-btn" disabled>Aguardando API</button>
+                    </div>
+                </div>
+                
+                <!-- Netflix Connect -->
+                <div class="settings-item">
+                    <div class="service-info">
+                        <span class="service-icon">🍿</span>
+                        <div class="service-details">
+                            <span class="service-name">Netflix</span>
+                            <span class="service-status disconnected">Desconectado</span>
+                        </div>
+                    </div>
+                    <div class="service-actions">
+                        <button class="settings-btn">Importar Histórico</button>
+                    </div>
+                </div>
+
+                <!-- Letterboxd Connect -->
+                <div class="settings-item">
+                    <div class="service-info">
+                        <span class="service-icon">🎬</span>
+                        <div class="service-details">
+                            <span class="service-name">Letterboxd</span>
+                            <span class="service-status disconnected">Desconectado</span>
+                        </div>
+                    </div>
+                    <div class="service-actions">
+                        <button class="settings-btn">Importar RSS</button>
+                    </div>
+                </div>
+            </div>
         </section>
     </section>
 </main>

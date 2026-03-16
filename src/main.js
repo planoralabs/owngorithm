@@ -72,6 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Onboarding
     initOnboarding();
+
+    // Initialize Sidebar Navigation
+    initNavigation();
 });
 
 
@@ -612,6 +615,49 @@ function initResetButton() {
             }
         });
     }
+}
+
+// ---- Navigation ----
+function initNavigation() {
+    const btnDashboard = document.getElementById('btn-nav-dashboard');
+    const btnSettings = document.getElementById('btn-nav-settings');
+    const dashboardView = document.querySelector('.dashboard-grid-container');
+    const settingsView = document.getElementById('settings-view');
+
+    if (!btnDashboard || !btnSettings) return;
+
+    const switchView = (target) => {
+        if (target === 'dashboard') {
+            dashboardView.classList.remove('hidden');
+            settingsView.classList.add('hidden');
+            btnDashboard.classList.add('active');
+            btnSettings.classList.remove('active');
+        } else {
+            dashboardView.classList.add('hidden');
+            settingsView.classList.remove('hidden');
+            btnDashboard.classList.remove('active');
+            btnSettings.classList.add('active');
+        }
+        // Force resize items if needed
+        handleResize();
+    };
+
+    btnDashboard.addEventListener('click', () => switchView('dashboard'));
+    btnSettings.addEventListener('click', () => switchView('settings'));
+
+    // Connect YouTube Settings button
+    const btnSettingsYt = document.getElementById('btn-settings-yt-connect');
+    const btnDashboardYt = document.getElementById('btn-yt-connect');
+    
+    // Mirror YouTube connection logic in settings
+    btnSettingsYt?.addEventListener('click', () => {
+        btnDashboardYt?.click();
+    });
+
+    // Handle back button on expanded tile to also ensure dashboard view
+    document.getElementById('btn-back')?.addEventListener('click', () => {
+        switchView('dashboard');
+    });
 }
 
 function finishOnboardingAction() {
