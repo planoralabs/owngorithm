@@ -489,4 +489,16 @@ export function updateYoutubeWidget(newData) {
 
     // Trigger re-render
     renderYoutube();
+
+    // Update settings status label
+    const settingsStatus = document.getElementById('settings-yt-status');
+    const dashboardBtn = document.getElementById('btn-yt-connect');
+    if (settingsStatus) {
+        settingsStatus.textContent = "Conectado";
+        settingsStatus.classList.remove('disconnected');
+        settingsStatus.classList.add('connected');
+    }
+    if (dashboardBtn) {
+        dashboardBtn.style.display = 'none';
+    }
 }

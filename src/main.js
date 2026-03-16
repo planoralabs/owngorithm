@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUIForAuth(user, profile);
     });
 
+    // Profile Avatar Edit Init
+    initProfileAvatarEdit();
+
     // Resize handler
     window.addEventListener('resize', handleResize);
 
@@ -337,12 +340,38 @@ function initTileExpansion() {
             grid.classList.add('is-expanded');
             container.classList.add('is-expanded');
 
+            // Update Account Pill Info based on service
+            const accountInfo = document.getElementById('expanded-account-info');
+            if (accountInfo) {
+                if (tile.classList.contains('tile-youtube')) {
+                    accountInfo.textContent = "roque@youtube.com";
+                } else if (tile.classList.contains('tile-spotify')) {
+                    accountInfo.textContent = "@matheusroque";
+                } else if (tile.classList.contains('tile-netflix')) {
+                    accountInfo.textContent = "Netflix JSON";
+                } else {
+                    accountInfo.textContent = "matheus@own.page";
+                }
+            }
+
             grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             setTimeout(() => {
                 handleResize();
             }, 550);
         });
+    });
+
+    const expandedSettingsBtn = document.getElementById('btn-expanded-settings');
+    expandedSettingsBtn?.addEventListener('click', () => {
+        // Return to dashboard grid first
+        backBtn.click();
+        
+        // Then switch to settings view
+        const btnNavSettings = document.getElementById('btn-nav-settings');
+        if (btnNavSettings) {
+            btnNavSettings.click();
+        }
     });
 
     backBtn.addEventListener('click', (e) => {
@@ -628,13 +657,13 @@ function initNavigation() {
 
     const switchView = (target) => {
         if (target === 'dashboard') {
-            dashboardView.classList.remove('hidden');
-            settingsView.classList.add('hidden');
+            dashboardView.style.display = '';
+            settingsView.style.display = 'none';
             btnDashboard.classList.add('active');
             btnSettings.classList.remove('active');
         } else {
-            dashboardView.classList.add('hidden');
-            settingsView.classList.remove('hidden');
+            dashboardView.style.display = 'none';
+            settingsView.style.display = 'block';
             btnDashboard.classList.remove('active');
             btnSettings.classList.add('active');
         }
@@ -657,6 +686,119 @@ function initNavigation() {
     // Handle back button on expanded tile to also ensure dashboard view
     document.getElementById('btn-back')?.addEventListener('click', () => {
         switchView('dashboard');
+    });
+}
+
+// ---- Profile Avatar Editing & Cropping ----
+function initProfileAvatarEdit() {
+    const btnEdit = document.getElementById('btn-edit-avatar');
+    const inputAvatar = document.getElementById('input-avatar');
+    const cropModal = document.getElementById('crop-modal');
+    const previewImg = document.getElementById('crop-preview-img');
+    const zoomInput = document.getElementById('input-zoom');
+    const viewport = document.getElementById('crop-viewport');
+    const btnSave = document.getElementById('btn-save-crop');
+    const btnCancel = document.getElementById('btn-cancel-crop');
+    const profileImg = document.getElementById('profile-img');
+
+    if (!btnEdit || !inputAvatar || !cropModal) return;
+
+    let posX = 0, posY = 0, zoom = 1;
+    let isDragging = false;
+    let startX, startY;
+
+    btnEdit.addEventListener('click', () => inputAvatar.click());
+
+    inputAvatar.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                previewImg.src = event.target.result;
+                posX = 0; posY = 0; zoom = 1;
+                zoomInput.value = 1;
+                updatePreview();
+                cropModal.classList.add('active');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function updatePreview() {
+        previewImg.style.transform = `translate(${posX}px, ${posY}px) scale(${zoom})`;
+    }
+
+    const container = viewport.parentElement;
+    
+    const startDragging = (clientX, clientY) => {
+        isDragging = true;
+        startX = clientX - posX;
+        startY = clientY - posY;
+        container.style.cursor = 'grabbing';
+    };
+
+    const moveDragging = (clientX, clientY) => {
+        if (!isDragging) return;
+        posX = clientX - startX;
+        posY = clientY - startY;
+        updatePreview();
+    };
+
+    const stopDragging = () => {
+        isDragging = false;
+        container.style.cursor = 'move';
+    };
+
+    container.addEventListener('mousedown', (e) => startDragging(e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => moveDragging(e.clientX, e.clientY));
+    window.addEventListener('mouseup', stopDragging);
+
+    // Touch Support
+    container.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        startDragging(touch.clientX, touch.clientY);
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        moveDragging(touch.clientX, touch.clientY);
+    }, { passive: false });
+    window.addEventListener('touchend', stopDragging);
+
+    zoomInput.addEventListener('input', () => {
+        zoom = parseFloat(zoomInput.value);
+        updatePreview();
+    });
+
+    btnCancel.addEventListener('click', () => {
+        cropModal.classList.remove('active');
+        inputAvatar.value = '';
+    });
+
+    btnSave.addEventListener('click', () => {
+        const canvas = document.createElement('canvas');
+        const vWidth = viewport.offsetWidth;
+        const vHeight = viewport.offsetHeight;
+        canvas.width = vWidth;
+        canvas.height = vHeight;
+        const ctx = canvas.getContext('2d');
+
+        const img = new Image();
+        img.src = previewImg.src;
+        img.onload = () => {
+            ctx.fillStyle = 'white'; // Background if transparent
+            ctx.fillRect(0,0,vWidth,vHeight);
+            
+            ctx.save();
+            // Translate to center of viewport + current drag offset
+            ctx.translate(vWidth/2 + posX, vHeight/2 + posY);
+            ctx.scale(zoom, zoom);
+            ctx.drawImage(img, -img.width / 2, -img.height / 2);
+            ctx.restore();
+
+            profileImg.src = canvas.toDataURL('image/jpeg', 0.9);
+            cropModal.classList.remove('active');
+            inputAvatar.value = '';
+        };
     });
 }
 
