@@ -233,6 +233,13 @@ body {
     opacity: 1;
 }
 
+/* Dark Theme Logo Swap */
+[data-theme="charon"] .logo-img,
+[data-theme="mars"] .logo-img,
+[data-theme="frosty"] .logo-img {
+    content: url("/transpsquarewhitelogo.png");
+}
+
 @media (max-width: 900px) {
     .profile-logo {
         justify-content: center;
@@ -2106,38 +2113,34 @@ body.mobile-preview-active .tile {
 }
 
 .reset-floating-btn {
-    position: absolute;
-    bottom: 140px; /* Above save and trigger */
-    right: 4px;
+    position: fixed;
+    top: 40px;
+    right: 40px;
     width: 48px;
     height: 48px;
     background: var(--bg-tile);
     color: var(--muted);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
-    display: flex;
+    display: none; /* Hidden by default */
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 100000;
-    opacity: 0;
-    transform: translateY(20px) scale(0.8);
-    pointer-events: none;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.3s ease;
     box-shadow: 0 12px 32px var(--shadow);
 }
 
-.toolbar-container.active .reset-floating-btn {
-    opacity: 0.6;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+/* Show only when in Dashboard */
+body.onboarding-done .reset-floating-btn,
+.landing-page.hidden ~ .reset-floating-btn {
+    display: flex;
 }
 
 .reset-floating-btn:hover {
-    opacity: 1;
     background: var(--negative);
     color: white;
-    transform: translateY(-5px);
+    transform: rotate(-45deg) scale(1.1);
 }
 
 .landing-nav-actions {
