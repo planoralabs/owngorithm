@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="ceres">
+<html lang="pt-BR" data-theme="creme">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +7,168 @@
     <meta name="description" content="Visualize seu algoritmo pessoal. Descubra seus padrões de consumo de conteúdo, música, vídeos e navegação.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/style.css">
     <script src="https://accounts.google.com/gsi/client"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" type="image/png" href="/favicon.png">
 </head>
 <body>
+
+    <!-- Landing Page -->
+    <div class="landing-page" id="landing-page">
+        <nav class="landing-nav">
+            <div class="profile-logo">
+                <img src="/squarelogo.png" alt="Owngorithm Logo" class="logo-img">
+            </div>
+            <button class="landing-cta" id="btn-start-landing">Começar</button>
+        </nav>
+
+        <div class="landing-hero">
+            <h1 class="landing-title">Tudo o que você consome constrói quem você é.</h1>
+            <p class="landing-subtitle">Seu algoritmo pessoal. Uma visão cristalina do seu consumo digital, interesses e evolução.</p>
+            <button class="landing-cta" id="btn-hero-start">Entrar no meu fluxo</button>
+        </div>
+
+        <div class="landing-preview">
+            <div class="bento-grid">
+                <!-- Spotify -->
+                <div class="bento-item item-2x2" data-service="spotify">
+                    <div class="bento-icon">🎧</div>
+                    <div class="bento-details">
+                        <span class="bento-val">12.4h</span>
+                        <span class="bento-lbl">Deep House</span>
+                    </div>
+                </div>
+                <!-- YouTube -->
+                <div class="bento-item item-2x1" data-service="youtube">
+                    <div class="bento-icon">▶️</div>
+                    <div class="bento-details">
+                        <span class="bento-val">45</span>
+                        <span class="bento-lbl">vídeos/dia</span>
+                    </div>
+                </div>
+                <!-- Instagram -->
+                <div class="bento-item item-1x1" data-service="instagram">
+                    <div class="bento-icon">📸</div>
+                    <div class="bento-details">
+                        <span class="bento-val">820</span>
+                        <span class="bento-lbl">likes</span>
+                    </div>
+                </div>
+                <!-- Reading -->
+                <div class="bento-item item-1x2" data-service="reading">
+                    <div class="bento-icon">📚</div>
+                    <div class="bento-details">
+                        <span class="bento-val">3</span>
+                        <span class="bento-lbl">livros/mês</span>
+                    </div>
+                </div>
+                <!-- X -->
+                <div class="bento-item item-1x1" data-service="x">
+                    <div class="bento-icon">🐦</div>
+                    <div class="bento-details">
+                        <span class="bento-val">120</span>
+                        <span class="bento-lbl">posts</span>
+                    </div>
+                </div>
+                <!-- Facebook -->
+                <div class="bento-item item-2x1" data-service="facebook">
+                    <div class="bento-icon">👥</div>
+                    <div class="bento-details">
+                        <span class="bento-val">12%</span>
+                        <span class="bento-lbl">atenção</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Overlay -->
+    <div class="onboarding-overlay" id="onboarding-overlay">
+        <div class="onboarding-card">
+            <!-- Step 1: Name -->
+            <div class="onboarding-step active" data-step="1">
+                <h2>Como podemos te chamar?</h2>
+                <p>O algoritmo é seu. Comece dando um nome ao seu painel pessoal.</p>
+                <input type="text" id="ob-input-name" class="onboarding-input" placeholder="Seu nome aqui..." value="Matheus Roque">
+                
+                <div class="onboarding-preview-mini">
+                    <div class="preview-avatar-mini"></div>
+                    <div class="preview-info-mini">
+                        <div class="preview-name-mini" id="ob-preview-name">Matheus Roque</div>
+                        <div class="preview-bio-mini">Seu algoritmo pessoal</div>
+                    </div>
+                </div>
+
+                <div class="onboarding-footer">
+                    <button class="onboarding-btn btn-next" data-next="2">Continuar</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Widgets -->
+            <div class="onboarding-step" data-step="2">
+                <h2>O que você quer rastrear?</h2>
+                <p>Escolha os primeiros pilares do seu algoritmo. Você pode mudar isso depois.</p>
+                
+                <div class="widget-selector-grid">
+                    <div class="widget-opt selected" data-widget="tile-mind-map">
+                        <span class="widget-opt-icon">🧠</span>
+                        <span class="widget-opt-label">Mind Map</span>
+                    </div>
+                    <div class="widget-opt selected" data-widget="tile-spotify">
+                        <span class="widget-opt-icon">🎧</span>
+                        <span class="widget-opt-label">Spotify</span>
+                    </div>
+                    <div class="widget-opt selected" data-widget="tile-youtube">
+                        <span class="widget-opt-icon">▶️</span>
+                        <span class="widget-opt-label">YouTube</span>
+                    </div>
+                    <div class="widget-opt" data-widget="tile-reading">
+                        <span class="widget-opt-icon">📚</span>
+                        <span class="widget-opt-label">Leitura</span>
+                    </div>
+                    <div class="widget-opt" data-widget="tile-movies">
+                        <span class="widget-opt-icon">🎬</span>
+                        <span class="widget-opt-label">Cinema</span>
+                    </div>
+                    <div class="widget-opt" data-widget="tile-photos">
+                        <span class="widget-opt-icon">🖼️</span>
+                        <span class="widget-opt-label">Memórias</span>
+                    </div>
+                </div>
+
+                <div class="onboarding-footer">
+                    <button class="onboarding-btn btn-next" data-next="3">Quase lá</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Theme -->
+            <div class="onboarding-step" data-step="3">
+                <h2>Escolha seu mood</h2>
+                <p>A estética molda a experiência. Escolha o tema que melhor combina com você.</p>
+                
+                <div class="theme-carousel" id="ob-theme-carousel" style="justify-content: center; margin-bottom: 32px;">
+                    <div class="theme-card active" data-theme-id="creme">
+                        <span class="theme-label">creme</span>
+                        <div class="theme-preview" style="background-color: #F6F4EF;"></div>
+                    </div>
+                    <div class="theme-card" data-theme-id="charon">
+                        <span class="theme-label">charon</span>
+                        <div class="theme-preview" style="background-color: #1B1B1B;"></div>
+                    </div>
+                    <div class="theme-card" data-theme-id="mars">
+                        <span class="theme-label">mars</span>
+                        <div class="theme-preview" style="background-color: #2D2824;"></div>
+                    </div>
+                </div>
+
+                <div class="onboarding-footer">
+                    <button class="onboarding-btn btn-next" id="btn-finish-onboarding">Explorar meu algoritmo</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Noise overlay -->
     <div class="noise-overlay"></div>
@@ -20,10 +177,13 @@
 
         <!-- Profile Sidebar -->
         <aside class="profile-sidebar" id="profile-sidebar">
+            <div class="profile-logo">
+                <img src="/squarelogo.png" alt="Owngorithm Logo" class="logo-img">
+            </div>
             <div class="profile-avatar">
                 <img src="https://images.own.page/6d0215e5-7d67-4072-a610-01caaa11516f/Z3V8aUzGUznQKjUVC2jCA2uCZ7dEup9ckGcx4etJVVS6pxgcodJ.jpg" alt="Matheus Roque" id="profile-img">
             </div>
-            <h1 class="profile-name">Matheus Roque</h1>
+            <div class="profile-name">Matheus Roque</div>
             <p class="profile-bio">Seu algoritmo pessoal</p>
             <div class="profile-stats">
                 <div class="stat">
@@ -45,7 +205,7 @@
             </button>
             <section class="dashboard-grid" id="dashboard">
 
-            <!-- Mind Map — Where your attention went -->
+            <!-- Mind Map -->
             <div class="tile tile-mind-map" id="tile-mind-map">
                 <div class="tile-controls">
                     <button class="control-btn btn-resize" title="Redimensionar">📐</button>
@@ -58,7 +218,6 @@
                     <span class="tile-badge">hoje</span>
                 </div>
                 <canvas id="canvas-mindmap" class="tile-canvas"></canvas>
-                <div class="tile-resize-handle"></div>
             </div>
 
             <!-- Spotify Widget -->
@@ -78,18 +237,10 @@
                         <span class="track-name" id="track-name">Retrowave</span>
                         <span class="track-artist" id="track-artist">Synthwave Mix</span>
                     </div>
-                    <div class="eq-bars">
-                        <span class="eq-bar"></span>
-                        <span class="eq-bar"></span>
-                        <span class="eq-bar"></span>
-                        <span class="eq-bar"></span>
-                    </div>
                 </div>
-                <div class="genre-tags" id="genre-tags"></div>
-                <div class="tile-resize-handle"></div>
             </div>
 
-            <!-- YouTube Widget — Total Access -->
+            <!-- YouTube Widget -->
             <div class="tile tile-youtube" id="tile-youtube">
                 <div class="tile-controls">
                     <button class="control-btn btn-resize" title="Redimensionar">📐</button>
@@ -100,39 +251,11 @@
                     <span class="tile-icon">▶️</span>
                     <h3 class="tile-title">YouTube Algorithm</h3>
                     <button id="btn-yt-connect" class="yt-connect-btn">Conectar</button>
-                    <span class="tile-badge">esta semana</span>
                 </div>
-                
-                <div class="youtube-layout">
-                    <div class="youtube-chart-side">
-                        <canvas id="canvas-youtube" class="tile-canvas"></canvas>
-                    </div>
-                    
-                    <div class="youtube-details-side">
-                        <div class="youtube-stat">
-                            <span class="big-number" id="yt-hours">--</span>
-                            <span class="big-label">análise de interesse</span>
-                        </div>
-                        
-                        <div class="yt-details-content">
-                            <div class="yt-tabs">
-                                <span class="yt-tab active" data-tab="channels">Canais</span>
-                                <span class="yt-tab" data-tab="recent">Vistos</span>
-                                <span class="yt-tab" data-tab="playlists">Playlists</span>
-                            </div>
-                            <div class="yt-channels-list" id="yt-channels-list">
-                                <!-- Dynamic content -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="yt-expanded-footer" id="yt-summary">
-                    Conecte para ver sua dieta intelectual e mood atual.
-                </div>
-                <div class="tile-resize-handle"></div>
+                <canvas id="canvas-youtube" class="tile-canvas"></canvas>
             </div>
 
-            <!-- Reading Widget — Refactored -->
+            <!-- Reading Widget -->
             <div class="tile tile-reading" id="tile-reading">
                 <div class="tile-controls">
                     <button class="control-btn btn-resize" title="Redimensionar">📐</button>
@@ -142,13 +265,11 @@
                 <div class="tile-header">
                     <span class="tile-icon">📚</span>
                     <h3 class="tile-title">Biblioteca & Leituras</h3>
-                    <span class="tile-badge">estante</span>
                 </div>
                 <div class="book-list" id="book-list"></div>
-                <div class="tile-resize-handle"></div>
             </div>
 
-            <!-- Movie Widget — NEW -->
+            <!-- Movie Widget -->
             <div class="tile tile-movies" id="tile-movies">
                 <div class="tile-controls">
                     <button class="control-btn btn-resize" title="Redimensionar">📐</button>
@@ -158,13 +279,10 @@
                 <div class="tile-header">
                     <span class="tile-icon">🎬</span>
                     <h3 class="tile-title">Cinema e Séries</h3>
-                    <span class="tile-badge">Letterboxd</span>
                 </div>
                 <div class="movies-grid" id="movies-list">
-                    <!-- Future connection -->
-                    <p class="placeholder-text">Aguardando conexão com Letterboxd/Trakt...</p>
+                    <p class="placeholder-text">Aguardando Letterboxd...</p>
                 </div>
-                <div class="tile-resize-handle"></div>
             </div>
 
             <!-- Navigation Widget -->
@@ -177,40 +295,20 @@
                 <div class="tile-header">
                     <span class="tile-icon">🧭</span>
                     <h3 class="tile-title">Fluxo de Navegação</h3>
-                    <span class="tile-badge">7 dias</span>
                 </div>
                 <canvas id="canvas-navigation" class="tile-canvas"></canvas>
             </div>
 
-            <!-- Intention / Goal Widget -->
-            <div class="tile tile-intention" id="tile-intention">
-                <div class="tile-header">
-                    <span class="tile-icon">🎯</span>
-                    <h3 class="tile-title">Algoritmo de Intenção</h3>
-                </div>
-                <div class="intention-content">
-                    <p class="intention-goal" id="intention-goal">Aprender IA e Machine Learning</p>
-                    <div class="intention-bar-container">
-                        <div class="intention-bar" id="intention-bar"></div>
-                    </div>
-                    <div class="intention-meta">
-                        <span class="intention-pct" id="intention-pct">68%</span>
-                        <span class="intention-label">do seu conteúdo alinhado</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Agenda Widget (formerly Heatmap/Activity) -->
+            <!-- Agenda Widget -->
             <div class="tile tile-agenda" id="tile-agenda">
                 <div class="tile-header">
                     <span class="tile-icon">📅</span>
                     <h3 class="tile-title">Agenda & Atividade</h3>
-                    <span class="tile-badge">Google Calendar</span>
                 </div>
                 <canvas id="canvas-heatmap" class="tile-canvas"></canvas>
             </div>
 
-            <!-- Photos & Experiences Widget — NEW -->
+            <!-- Photos Widget -->
             <div class="tile tile-photos" id="tile-photos">
                 <div class="tile-controls">
                     <button class="control-btn btn-resize" title="Redimensionar">📐</button>
@@ -220,14 +318,11 @@
                 <div class="tile-header">
                     <span class="tile-icon">🖼️</span>
                     <h3 class="tile-title">Memórias e Viagens</h3>
-                    <span class="tile-badge">Google Photos</span>
                 </div>
-                <div class="photos-preview" id="photos-grid">
-                    <p class="placeholder-text">Mapa de experiências fotográficas...</p>
-                </div>
+                <div class="photos-preview" id="photos-grid"></div>
             </div>
 
-            <!-- World Map Tracking — NEW -->
+            <!-- Map Widget -->
             <div class="tile tile-map" id="tile-map">
                 <div class="tile-controls">
                     <button class="control-btn btn-resize" title="Redimensionar">📐</button>
@@ -237,11 +332,9 @@
                 <div class="tile-header">
                     <span class="tile-icon">🌍</span>
                     <h3 class="tile-title">World Tracking</h3>
-                    <span class="tile-badge">em breve</span>
                 </div>
                 <div class="map-placeholder">
                     <div class="map-dot"></div>
-                    <p>Mapeando sua movimentação pelo mundo...</p>
                 </div>
             </div>
 
@@ -257,71 +350,31 @@
                     <h3 class="tile-title">Foco</h3>
                 </div>
                 <canvas id="canvas-focus" class="tile-canvas"></canvas>
-                <div class="focus-stats" id="focus-stats">
-                    <div class="focus-item">
-                        <span class="focus-val" id="focus-productive">5.2h</span>
-                        <span class="focus-lbl">produtivo</span>
-                    </div>
-                    <div class="focus-item">
-                        <span class="focus-val" id="focus-distracted">2.1h</span>
-                        <span class="focus-lbl">distrações</span>
-                    </div>
-                </div>
-            <!-- Instagram Widget -->
+            </div>
+
+            <!-- Social Widgets -->
             <div class="tile tile-instagram" id="tile-instagram">
-                <div class="tile-controls">
-                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
-                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
-                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
-                </div>
                 <div class="tile-header">
                     <span class="tile-icon">📸</span>
                     <h3 class="tile-title">Instagram</h3>
                 </div>
-                <p class="placeholder-text">Conecte sua conta para ver métricas de engajamento...</p>
             </div>
-
-            <!-- TikTok Widget -->
             <div class="tile tile-tiktok" id="tile-tiktok">
-                <div class="tile-controls">
-                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
-                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
-                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
-                </div>
                 <div class="tile-header">
                     <span class="tile-icon">📱</span>
                     <h3 class="tile-title">TikTok</h3>
                 </div>
-                <p class="placeholder-text">Sincronizando tendências e visualizações...</p>
             </div>
-
-            <!-- X Widget -->
             <div class="tile tile-x" id="tile-x">
-                <div class="tile-controls">
-                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
-                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
-                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
-                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🐦</span>
-                    <h3 class="tile-title">X (Twitter)</h3>
+                    <h3 class="tile-title">X</h3>
                 </div>
-                <p class="placeholder-text">Monitorando sua bolha e alcance...</p>
             </div>
-
-            <!-- Images Widget — NEW -->
             <div class="tile tile-gallery" id="tile-gallery">
-                <div class="tile-controls">
-                    <button class="control-btn btn-resize" title="Redimensionar">📐</button>
-                    <button class="control-btn btn-duplicate" title="Duplicar">📑</button>
-                    <button class="control-btn btn-delete" title="Excluir">🗑️</button>
-                </div>
                 <div class="tile-header">
                     <span class="tile-icon">🖼️</span>
-                    <h3 class="tile-title">Coleção de Imagens</h3>
-                </div>
-                <div class="gallery-placeholder">
-                    <p class="placeholder-text">Arraste ou anexe imagens para seu board...</p>
+                    <h3 class="tile-title">Galeria</h3>
                 </div>
             </div>
 
@@ -329,141 +382,59 @@
     </section>
 </main>
 
-    <!-- Bottom Toolbar (own.page style) -->
+    <!-- Fixed Toolbar Structure -->
     <div class="toolbar-container" id="toolbar-container">
-
         <!-- Design Panel -->
         <div class="toolbar-panel" id="panel-design" data-open="false">
-            <div class="toolbar-panel-header">
-                <h3>Design</h3>
-            </div>
-
-            <!-- Theme Carousel -->
+            <div class="toolbar-panel-header"><h3>Design</h3></div>
             <div class="theme-carousel" id="theme-carousel">
-                <div class="theme-card" data-theme-id="ceres">
-                    <span class="theme-label">ceres</span>
-                    <div class="theme-preview" style="background-color: #F6F4EF;">
-                        <div class="preview-avatar"></div>
-                        <div class="preview-title" style="color: #686259;">Owngorithm</div>
-                        <div class="preview-sub" style="color: #716B62;">seu algoritmo...</div>
-                    </div>
+                <div class="theme-card" data-theme-id="creme">
+                    <span class="theme-label">creme</span>
+                    <div class="theme-preview" style="background-color: #F6F4EF;"></div>
                 </div>
                 <div class="theme-card" data-theme-id="charon">
                     <span class="theme-label">charon</span>
-                    <div class="theme-preview" style="background-color: #1B1B1B; border: 2px solid #AF9986;">
-                        <div class="preview-avatar"></div>
-                        <div class="preview-title" style="color: #AD8857;">Owngorithm</div>
-                        <div class="preview-sub" style="color: #AF9986;">seu algoritmo...</div>
-                    </div>
+                    <div class="theme-preview" style="background-color: #1B1B1B;"></div>
                 </div>
                 <div class="theme-card" data-theme-id="mars">
                     <span class="theme-label">mars</span>
-                    <div class="theme-preview" style="background-color: #2D2824;">
-                        <div class="preview-avatar"></div>
-                        <div class="preview-title" style="color: #FF833A;">Owngorithm</div>
-                        <div class="preview-sub" style="color: #A49283;">seu algoritmo...</div>
-                    </div>
-                </div>
-                <div class="theme-card" data-theme-id="earth">
-                    <span class="theme-label">earth</span>
-                    <div class="theme-preview" style="background-color: #F6FFF4;">
-                        <div class="preview-avatar"></div>
-                        <div class="preview-title" style="color: #0B2B1C;">Owngorithm</div>
-                        <div class="preview-sub" style="color: #2A6843;">seu algoritmo...</div>
-                    </div>
-                </div>
-                <div class="theme-card active" data-theme-id="frosty">
-                    <span class="theme-label">frosty</span>
-                    <div class="theme-preview" style="background-color: #132533;">
-                        <div class="preview-avatar"></div>
-                        <div class="preview-title" style="color: #649CC7;">Owngorithm</div>
-                        <div class="preview-sub" style="color: #D6F2FF;">seu algoritmo...</div>
-                    </div>
+                    <div class="theme-preview" style="background-color: #2D2824;"></div>
                 </div>
             </div>
         </div>
 
         <!-- Widgets Panel -->
         <div class="toolbar-panel" id="panel-widgets" data-open="false">
-            <div class="toolbar-panel-header">
-                <h3>Gerenciar Widgets</h3>
-            </div>
+            <div class="toolbar-panel-header"><h3>Gerenciar Widgets</h3></div>
             <div class="widget-manager-list" id="widget-manager-list">
-                <button class="widget-manager-btn active" data-widget-id="tile-mind-map">
-                    <div class="widget-icon-bg">🧠</div>
-                    <span class="widget-label">Mind Map</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-spotify">
-                    <div class="widget-icon-bg">🎧</div>
-                    <span class="widget-label">Spotify</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-youtube">
-                    <div class="widget-icon-bg">▶️</div>
-                    <span class="widget-label">YouTube</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-reading">
-                    <div class="widget-icon-bg">📚</div>
-                    <span class="widget-label">Leitura</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-movies">
-                    <div class="widget-icon-bg">🎬</div>
-                    <span class="widget-label">Cinema</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-navigation">
-                    <div class="widget-icon-bg">🧭</div>
-                    <span class="widget-label">Navegação</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-agenda">
-                    <div class="widget-icon-bg">📅</div>
-                    <span class="widget-label">Agenda</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-photos">
-                    <div class="widget-icon-bg">🖼️</div>
-                    <span class="widget-label">Fotos</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-map">
-                    <div class="widget-icon-bg">🌍</div>
-                    <span class="widget-label">Mapa</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-focus">
-                    <div class="widget-icon-bg">⏱️</div>
-                    <span class="widget-label">Foco</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-instagram">
-                    <div class="widget-icon-bg">📸</div>
-                    <span class="widget-label">Instagram</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-tiktok">
-                    <div class="widget-icon-bg">📱</div>
-                    <span class="widget-label">TikTok</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-x">
-                    <div class="widget-icon-bg">🐦</div>
-                    <span class="widget-label">X</span>
-                </button>
-                <button class="widget-manager-btn active" data-widget-id="tile-gallery">
-                    <div class="widget-icon-bg">🖼️</div>
-                    <span class="widget-label">Imagens</span>
-                </button>
+                <!-- Simplified for restoration -->
+                <button class="widget-manager-btn active" data-widget-id="tile-mind-map">🧠 <span>Mind Map</span></button>
+                <button class="widget-manager-btn active" data-widget-id="tile-spotify">🎧 <span>Spotify</span></button>
+                <button class="widget-manager-btn active" data-widget-id="tile-youtube">▶️ <span>YouTube</span></button>
             </div>
         </div>
 
-        <!-- Toolbar Buttons -->
         <div class="toolbar-bar" id="toolbar-bar">
-            <button class="toolbar-btn active" id="btn-design" aria-label="Design" title="Design">
+            <button class="toolbar-btn" id="btn-design" aria-label="Design" title="Configurações de Tema">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"></path></svg>
             </button>
-            <div class="toolbar-divider"></div>
-            <button class="toolbar-btn" id="btn-widgets" aria-label="Layout" title="Gerenciar Widgets">
+            <button class="toolbar-btn" id="btn-widgets" aria-label="Widgets" title="Gerenciar Widgets">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M104,40V96a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8H96A8,8,0,0,1,104,40ZM96,152H40a8,8,0,0,0-8,8v56a8,8,0,0,0,8,8H96a8,8,0,0,0,8-8V160A8,8,0,0,0,96,152Zm120-48H160a8,8,0,0,0-8,8v56a8,8,0,0,0,8,8h56a8,8,0,0,0,8-8V112A8,8,0,0,0,216,104Zm0-72H160a8,8,0,0,0-8,8V96a8,8,0,0,0,8,8h56a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32Z"></path></svg>
             </button>
-            <button class="toolbar-btn" id="btn-data" aria-label="Dados" title="Importar Dados">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M248,128a87.34,87.34,0,0,1-17.6,52.81,8,8,0,1,1-12.8-9.62A71.34,71.34,0,0,0,232,128a72,72,0,0,0-144,0,8,8,0,0,1-16,0,88,88,0,0,1,176,0ZM128,88a40,40,0,0,0-9.76,78.79L102.59,204.1a8,8,0,0,0,6.09,9.45,7.7,7.7,0,0,0,1.68.18,8,8,0,0,0,7.78-6.26l16.42-38.94A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152ZM72,128a8,8,0,0,0-8-8H48a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128Z"></path></svg>
-            </button>
-            <button class="toolbar-btn" id="btn-fullscreen" aria-label="Tela Cheia" title="Tela Cheia">
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn" id="btn-fullscreen" aria-label="Visualização Mobile" title="Visualização Mobile">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H208V208Zm-32-80a8,8,0,0,1-8,8H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32A8,8,0,0,1,176,128Z"></path></svg>
             </button>
         </div>
+
+        <button class="toolbar-trigger" id="toolbar-trigger" aria-label="Abrir Menu">
+            <div class="trigger-dots">
+                <span class="trigger-dot dot-tl"></span>
+                <span class="trigger-dot dot-tr"></span>
+                <span class="trigger-dot dot-bl"></span>
+                <span class="trigger-dot dot-br"></span>
+            </div>
+        </button>
     </div>
 
     <script type="module" src="/src/main.js"></script>

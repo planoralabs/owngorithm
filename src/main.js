@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Tile Controls (Delete, Duplicate, Resize)
     initTileControls();
+
+    // Initialize Onboarding
+    initOnboarding();
 });
 
 
@@ -88,22 +91,34 @@ function initToolbar() {
         });
     }
 
+    // Toolbar trigger (expand/collapse)
+    const toolbarContainer = document.getElementById('toolbar-container');
+    const toolbarTrigger = document.getElementById('toolbar-trigger');
+    if (toolbarTrigger && toolbarContainer) {
+        toolbarTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toolbarContainer.classList.toggle('active');
+        });
+    }
+
     // Close panels on click outside
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.toolbar-container')) {
+        if (!e.target.closest('#toolbar-container')) {
             closeAllPanels();
+            toolbarContainer?.classList.remove('active');
         }
     });
 
-    // Fullscreen toggle
+    // Mobile Preview (Web) toggle
     const btnFullscreen = document.getElementById('btn-fullscreen');
     if (btnFullscreen) {
         btnFullscreen.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen?.();
-            } else {
-                document.exitFullscreen?.();
-            }
+            document.body.classList.toggle('mobile-preview-active');
+            
+            // Adjust canvas/widgets if needed after expansion/compression
+            setTimeout(() => {
+                handleResize();
+            }, 600);
         });
     }
 }
@@ -258,4 +273,118 @@ function initTileExpansion() {
             handleResize();
         }, 550);
     });
+}
+// ---- Onboarding & Landing Page ----
+function initOnboarding() {
+    const landing = document.getElementById('landing-page');
+    const overlay = document.getElementById('onboarding-overlay');
+    const startBtns = [document.getElementById('btn-start-landing'), document.getElementById('btn-hero-start')];
+    
+    if (!landing || !overlay) return;
+
+    // Handle Start
+    startBtns.forEach(btn => {
+        btn?.addEventListener('click', () => {
+            overlay.classList.add('active');
+        });
+    });
+
+    // Step Navigation
+    const nextBtns = overlay.querySelectorAll('.btn-next');
+    nextBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nextStep = btn.dataset.next;
+            if (nextStep) {
+                overlay.querySelectorAll('.onboarding-step').forEach(s => s.classList.remove('active'));
+                overlay.querySelector(`.onboarding-step[data-step="${nextStep}"]`).classList.add('active');
+            }
+        });
+    });
+
+    // Name Preview
+    const nameInput = document.getElementById('ob-input-name');
+    const namePreview = document.getElementById('ob-preview-name');
+    const profileName = document.querySelector('.profile-name');
+    
+    nameInput?.addEventListener('input', (e) => {
+        const val = e.target.value || 'Seu Nome';
+        if (namePreview) namePreview.textContent = val;
+        if (profileName) profileName.textContent = val;
+    });
+
+    // Widget Selection
+    const widgetOpts = overlay.querySelectorAll('.widget-opt');
+    widgetOpts.forEach(opt => {
+        opt.addEventListener('click', () => {
+            opt.classList.toggle('selected');
+        });
+    });
+
+    // Bento Hover Logic (Landing Page)
+    const bentoItems = document.querySelectorAll('.bento-item');
+    bentoItems.forEach(item => {
+        let timer;
+        item.addEventListener('mouseenter', () => {
+            // Short delay before internal expansion
+            timer = setTimeout(() => {
+                item.classList.add('expanded');
+            }, 600); // 600ms seems intuitive for "intent"
+        });
+
+        item.addEventListener('mouseleave', () => {
+            clearTimeout(timer);
+            item.classList.remove('expanded');
+        });
+    });
+
+    // Theme Selection (Onboarding)
+    import('./themes.js').then(ThemeModule => {
+        const obThemeCarousel = document.getElementById('ob-theme-carousel');
+        obThemeCarousel?.querySelectorAll('.theme-card').forEach(card => {
+            card.addEventListener('click', () => {
+                ThemeModule.setTheme(card.dataset.themeId);
+                // Sync with main carousel active state
+                obThemeCarousel.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+        });
+    });
+
+    // Finish
+    const finishBtn = document.getElementById('btn-finish-onboarding');
+    finishBtn?.addEventListener('click', () => {
+        // Apply Widget selection
+        const selectedWidgets = Array.from(overlay.querySelectorAll('.widget-opt.selected')).map(opt => opt.dataset.widget);
+        const allWidgets = overlay.querySelectorAll('.widget-opt');
+        
+        // If nothing selected, maybe keep default? Let's hide unselected.
+        allWidgets.forEach(opt => {
+            const widgetId = opt.dataset.widget;
+            const widget = document.getElementById(widgetId);
+            const managerBtn = document.querySelector(`.widget-manager-btn[data-widget-id="${widgetId}"]`);
+            
+            if (widget) {
+                const isSelected = opt.classList.contains('selected');
+                widget.style.display = isSelected ? '' : 'none';
+                managerBtn?.classList.toggle('active', isSelected);
+            }
+        });
+
+        // Hide UI
+        overlay.classList.remove('active');
+        landing.classList.add('hidden');
+        
+        // Final resize to fix layout
+        setTimeout(() => handleResize(), 1000);
+        
+        // Save onboarding completed
+        localStorage.setItem('owngorithm-onboarding-done', 'true');
+        document.body.classList.add('onboarding-done');
+    });
+
+    // Check if onboarding was already done
+    if (localStorage.getItem('owngorithm-onboarding-done') === 'true') {
+        landing.style.display = 'none';
+        document.body.classList.add('onboarding-done');
+    }
 }

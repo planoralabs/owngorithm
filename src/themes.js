@@ -3,9 +3,9 @@
 // Based on own.page theme system
 // ============================================
 
-const themes = ['ceres', 'charon', 'mars', 'earth', 'frosty'];
+const themes = ['creme', 'charon', 'mars', 'earth', 'frosty'];
 
-let currentTheme = 'ceres';
+let currentTheme = 'creme';
 
 export function getCurrentTheme() {
     return currentTheme;
@@ -35,7 +35,7 @@ export function loadSavedTheme() {
             return;
         }
     } catch (e) { /* ignore */ }
-    setTheme('ceres');
+    setTheme('creme');
 }
 
 export function initThemeCarousel(onThemeChange) {
