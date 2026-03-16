@@ -785,6 +785,8 @@ body.edit-mode .tile-resize-handle {
     height: 44px;
     border-radius: var(--radius-sm);
     background: linear-gradient(135deg, var(--accent), var(--chart-2));
+    background-size: cover;
+    background-position: center;
     flex-shrink: 0;
 }
 

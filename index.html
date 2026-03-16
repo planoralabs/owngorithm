@@ -606,18 +606,34 @@
                 </div>
 
                 <!-- Spotify -->
-                <div class="settings-item connected" data-service="spotify">
+                <div class="settings-item" data-service="spotify">
                     <div class="service-info">
                         <div class="service-icon">
                             <img src="https://cdn.simpleicons.org/spotify/1DB954" alt="Spotify">
                         </div>
                         <div class="service-details">
                             <span class="service-name">Spotify Music</span>
-                            <span class="service-status connected">Conectado como @matheusroque</span>
+                            <span class="service-status disconnected">Requer login via Spotify App</span>
                         </div>
                     </div>
                     <div class="service-actions">
-                        <button class="settings-btn btn-edit">Editar</button>
+                        <button class="settings-btn btn-connect" disabled title="API Oficial requer conta Premium">Indisponível (API Free)</button>
+                    </div>
+                </div>
+
+                <!-- Last.fm (The real data source) -->
+                <div class="settings-item" data-service="lastfm">
+                    <div class="service-info">
+                        <div class="service-icon">
+                            <img src="https://cdn.simpleicons.org/lastdotfm/D01F28" alt="Last.fm">
+                        </div>
+                        <div class="service-details">
+                            <span class="service-name">Last.fm (Spotify Stream)</span>
+                            <span class="service-status disconnected" id="settings-lastfm-status">Não conectado</span>
+                        </div>
+                    </div>
+                    <div class="service-actions">
+                        <button class="settings-btn btn-connect" id="btn-settings-lastfm-connect">Conectar API</button>
                     </div>
                 </div>
 
@@ -790,6 +806,7 @@
             </div>
         </div>
     </div>
+
 
     <script type="module" src="/src/main.js"></script>
 </body>

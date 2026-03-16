@@ -14,6 +14,7 @@ import {
     registerWithEmail, 
     logout 
 } from './authService.js';
+import { fetchLastfmData, saveLastfmUser, loadLastfmUser } from './lastfmService.js';
 import { auth, db } from './firebase.js';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import Sortable from 'sortablejs';
@@ -78,6 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Sidebar Navigation
     initNavigation();
+
+    // Initialize Last.fm Auth
+    initLastfmAuth();
 });
 
 
@@ -809,4 +813,62 @@ function finishOnboardingAction() {
     document.body.classList.add('onboarding-done');
     localStorage.setItem('owngorithm-onboarding-done', 'true');
     setTimeout(() => handleResize(), 1000);
+}
+function initLastfmAuth() {
+    const btnConnect = document.getElementById('btn-settings-lastfm-connect');
+    const statusText = document.getElementById('settings-lastfm-status');
+
+    const username = loadLastfmUser();
+    if (username) {
+        if (statusText) statusText.textContent = `Conectado como ${username}`;
+        statusText?.classList.remove('disconnected');
+        statusText?.classList.add('connected');
+        startLastfmLoop(username);
+    }
+
+    btnConnect?.addEventListener('click', () => {
+        const newUser = prompt("Digite seu usuário do Last.fm:", username || "");
+        if (newUser !== null && newUser.trim() !== "") {
+            const user = newUser.trim();
+            saveLastfmUser(user);
+            if (statusText) statusText.textContent = `Conectado como ${user}`;
+            statusText?.classList.remove('disconnected');
+            statusText?.classList.add('connected');
+            startLastfmLoop(user);
+        }
+    });
+}
+
+function startLastfmLoop(user) {
+    // Immediate fetch
+    updateSpotifyWithLastfm(user);
+    
+    // Loop every 30 seconds
+    setInterval(() => {
+        updateSpotifyWithLastfm(user);
+    }, 30000);
+}
+
+async function updateSpotifyWithLastfm(user) {
+    const tracks = await fetchLastfmData(user);
+    if (!tracks || tracks.length === 0) return;
+
+    const current = tracks[0];
+    const trackName = document.getElementById('track-name');
+    const trackArtist = document.getElementById('track-artist');
+    const albumArt = document.getElementById('album-art');
+
+    if (trackName) trackName.textContent = current.name;
+    if (trackArtist) trackArtist.textContent = current.artist['#text'];
+    if (albumArt && current.image && current.image.length > 0) {
+        const url = current.image[current.image.length - 1]['#text'];
+        if (url) albumArt.style.backgroundImage = `url(${url})`;
+    }
+
+    // Optional: Update account pill if expanded
+    const accountInfo = document.getElementById('expanded-account-info');
+    const spotifyTile = document.getElementById('tile-spotify');
+    if (spotifyTile?.classList.contains('active-tile') && accountInfo) {
+        accountInfo.textContent = `@${user} (Last.fm)`;
+    }
 }
