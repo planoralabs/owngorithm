@@ -698,8 +698,8 @@ body.edit-mode .tile-resize-handle {
 
 /* ---- YOUTUBE WIDGET — REFACTORED ---- */
 .tile-youtube {
-    display: flex !important;
-    flex-direction: column !important;
+    display: flex;
+    flex-direction: column;
     grid-column: span 2;
     gap: 0; /* Control gaps manually */
 }
