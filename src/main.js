@@ -97,7 +97,29 @@ function initToolbar() {
     if (toolbarTrigger && toolbarContainer) {
         toolbarTrigger.addEventListener('click', (e) => {
             e.stopPropagation();
-            toolbarContainer.classList.toggle('active');
+            const isActive = toolbarContainer.classList.toggle('active');
+            document.body.classList.toggle('edit-mode', isActive);
+            toggleSortable(isActive);
+        });
+    }
+
+    // Save button logic
+    const btnSave = document.getElementById('btn-save');
+    if (btnSave) {
+        btnSave.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Visual feedback
+            btnSave.classList.add('saving');
+            setTimeout(() => {
+                btnSave.classList.remove('saving');
+                // Close toolbar after saving
+                toolbarContainer?.classList.remove('active');
+                document.body.classList.remove('edit-mode');
+                toggleSortable(false);
+            }, 800);
+            
+            // Here we could implement actual save logic to localStorage
+            console.log('Algoritmo salvo!');
         });
     }
 
@@ -147,16 +169,17 @@ function initWidgetManager() {
 
 
 // ---- Sortable (Drag & Drop) ----
+let sortableInstance = null;
 function initSortable() {
     const grid = document.getElementById('dashboard');
     if (!grid) return;
 
-    Sortable.create(grid, {
-        animation: 500, // Longer for smoother reorganization
+    sortableInstance = Sortable.create(grid, {
+        animation: 500,
         easing: "cubic-bezier(0.2, 1, 0.3, 1)", 
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
-        fallbackTolerance: 3, 
+        disabled: !document.body.classList.contains('edit-mode'), // Initial state
         onStart: () => {
             document.body.classList.add('is-sorting');
         },
@@ -167,6 +190,12 @@ function initSortable() {
     });
 }
 
+function toggleSortable(active) {
+    if (sortableInstance) {
+        sortableInstance.option('disabled', !active);
+    }
+}
+
 
 // ---- Tile Controls (Delete, Duplicate, Resize) ----
 function initTileControls() {
@@ -174,6 +203,9 @@ function initTileControls() {
     if (!grid) return;
 
     grid.addEventListener('click', (e) => {
+        // Only allow edits in edit-mode
+        if (!document.body.classList.contains('edit-mode')) return;
+
         const btn = e.target.closest('.control-btn');
         if (!btn) return;
 
@@ -197,7 +229,6 @@ function initTileControls() {
             clone.style.transform = 'none';
             tile.after(clone);
             handleResize();
-            // Need to re-init expansion if we want clones to expand
             initTileExpansion(); 
         }
 
@@ -208,9 +239,6 @@ function initTileControls() {
             const nextSize = sizes[nextIdx];
 
             tile.dataset.size = nextSize;
-            
-            // Apply CSS spans based on dataset size
-            // This requires CSS Mapping
             tile.classList.remove('size-normal', 'size-wide', 'size-tall', 'size-large');
             tile.classList.add(`size-${nextSize}`);
             
@@ -218,7 +246,6 @@ function initTileControls() {
         }
     });
 }
-
 
 
 // ---- Stagger Animations ----
@@ -241,26 +268,26 @@ function initTileExpansion() {
 
     tiles.forEach(tile => {
         tile.addEventListener('click', () => {
+            // DISALLOW expansion in edit-mode
+            if (document.body.classList.contains('edit-mode')) return;
+
             // Prevent expanding if already expanded
             if (grid.classList.contains('is-expanded')) return;
 
-            // Mark this tile as active
             tile.classList.add('active-tile');
             grid.classList.add('is-expanded');
             container.classList.add('is-expanded');
 
-            // Scroll to top of grid
             grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            // Re-render widgets after expansion transition
             setTimeout(() => {
-                handleResize(); // Uses existing resize logic to recalibrate canvases
+                handleResize();
             }, 550);
         });
     });
 
     backBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent re-triggering tile click
+        e.stopPropagation();
         
         const activeTile = document.querySelector('.active-tile');
         if (activeTile) activeTile.classList.remove('active-tile');
@@ -268,7 +295,6 @@ function initTileExpansion() {
         grid.classList.remove('is-expanded');
         container.classList.remove('is-expanded');
 
-        // Re-render widgets after collapse transition
         setTimeout(() => {
             handleResize();
         }, 550);
@@ -386,5 +412,8 @@ function initOnboarding() {
     if (localStorage.getItem('owngorithm-onboarding-done') === 'true') {
         landing.style.display = 'none';
         document.body.classList.add('onboarding-done');
+    } else {
+        // Just ensure overlay is not active if it was by default in HTML
+        overlay.classList.remove('active');
     }
 }

@@ -402,10 +402,16 @@ body {
     }
 
     .tile-controls {
-        opacity: 1 !important; /* Always visible on mobile since no hover */
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    body.edit-mode .tile-controls {
+        opacity: 1 !important;
         transform: none !important;
         top: 10px;
         right: 10px;
+        pointer-events: auto !important;
     }
 }
 
@@ -426,23 +432,7 @@ body {
     cursor: default; /* Change to default since elements are interactive */
 }
 
-/* Tile Interaction Controls */
-.tile-controls {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    display: flex;
-    gap: 8px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    z-index: 1000;
-}
-
-.tile:hover .tile-controls {
-    opacity: 1;
-    transform: translateY(0);
-}
+/* Tile Interaction Controls moved to bottom for edit-mode consolidation */
 
 .control-btn {
     width: 32px;
@@ -487,13 +477,14 @@ body {
     border-radius: 0 0 var(--radius-lg) 0;
 }
 
-.tile:hover .tile-resize-handle {
-    opacity: 1;
-}
-
-.tile:hover {
+/* Tile interaction effects moved to edit-mode */
+body.edit-mode .tile:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 40px var(--shadow);
+}
+
+body.edit-mode .tile-resize-handle {
+    opacity: 1;
 }
 
 .tile-header {
@@ -1216,6 +1207,50 @@ body {
     background: var(--accent);
 }
 
+/* Save Button — Floating square diskette button */
+.save-btn {
+    position: absolute;
+    bottom: 80px;
+    right: 4px; /* Align with trigger */
+    width: 48px;
+    height: 48px;
+    background: var(--heading);
+    color: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100000;
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 12px 32px var(--shadow);
+}
+
+.toolbar-container.active .save-btn {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.save-btn:hover {
+    background: var(--accent);
+    transform: translateY(-5px);
+}
+
+.save-btn.saving {
+    background: var(--positive);
+    transform: scale(0.9);
+}
+
+.save-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
 .toolbar-container.active .toolbar-trigger:hover {
     transform: rotate(90deg) scale(1.08);
 }
@@ -1397,7 +1432,6 @@ body {
     font-size: 0.5rem;
 }
 
-/* Tile Interaction Controls */
 .tile-controls {
     position: absolute;
     top: -10px;
@@ -1411,32 +1445,32 @@ body {
     pointer-events: none;
 }
 
-.tile:hover .tile-controls {
+body.edit-mode .tile-controls {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
 }
 
 .control-btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: var(--bg-toolbar);
+    background: #FFFFFF !important; /* Forced white background as requested */
     border: 1px solid var(--border);
-    color: var(--body-color);
+    color: var(--accent); /* Highlight color */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 4px 12px var(--shadow);
     transition: all 0.2s ease;
-    font-size: 14px;
 }
 
 .control-btn:hover {
-    background: var(--bg-tile);
+    background: #FFFFFF !important;
     transform: scale(1.1);
-    color: var(--accent);
+    color: var(--heading);
+    box-shadow: 0 8px 16px var(--shadow);
 }
 
 .control-btn.btn-delete:hover {
@@ -1455,9 +1489,7 @@ body {
     transition: opacity 0.3s;
 }
 
-.tile:hover .tile-resize-handle {
-    opacity: 1;
-}
+/* Handled by edit-mode logic above */
 
 @media (max-width: 768px) {
     .toolbar-container {
@@ -1642,8 +1674,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 40px;
+    justify-content: flex-start; /* Changed from center to allow natural scroll and better hero placement */
+    padding: 120px 40px; /* More top padding for hero prominence */
     overflow-y: auto;
     transition: transform 0.8s cubic-bezier(0.8,0,0.2,1), opacity 0.5s ease;
 }
@@ -1671,9 +1703,13 @@ body.onboarding-done .landing-page {
 }
 
 .landing-hero {
-    max-width: 800px;
+    max-width: 900px;
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeSlideUp 1s ease both;
 }
 
 .landing-title {
@@ -1743,7 +1779,7 @@ body.onboarding-done .landing-page {
 .item-2x2 { grid-column: span 2; grid-row: span 2; }
 .item-2x1 { grid-column: span 2; }
 .item-1x2 { grid-row: span 2; }
-.item-1x1 { }
+/* .item-1x1 is default */
 
 .bento-icon {
     font-size: 1.5rem;
@@ -1780,8 +1816,14 @@ body.onboarding-done .landing-page {
     align-items: center;
     justify-content: center;
     padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, backdrop-filter 0.5s ease;
+}
+
+.onboarding-overlay.active {
     opacity: 1;
-    transition: opacity 0.5s ease;
+    pointer-events: all;
 }
 
 .onboarding-overlay.hidden {
