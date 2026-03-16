@@ -3,10 +3,22 @@
 // ============================================
 
 import './style.css';
+import './firebase.js';
 import { renderAllWidgets, handleResize, updateYoutubeWidget } from './widgets.js';
-import { loadSavedTheme, initThemeCarousel } from './themes.js';
+import { loadSavedTheme, initThemeCarousel, setTheme } from './themes.js';
 import { initYoutubeAuth } from './youtubeService.js';
+import { 
+    watchAuthState, 
+    signInWithGoogle, 
+    loginWithEmail, 
+    registerWithEmail, 
+    logout 
+} from './authService.js';
+import { auth, db } from './firebase.js';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import Sortable from 'sortablejs';
+
+let isSimulation = true; // Iniciamos em modo simulação por padrão para liberar testes
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,8 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render all widgets
     renderAllWidgets();
 
+    // Setup Auth UI
+    initAuthUI();
+
     // Setup toolbar toggle
     initToolbar();
+
+    // Watch Auth State
+    watchAuthState((user, profile) => {
+        updateUIForAuth(user, profile);
+    });
 
     // Resize handler
     window.addEventListener('resize', handleResize);
@@ -46,6 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Tile Controls (Delete, Duplicate, Resize)
     initTileControls();
+
+    // Reset Button Logic
+    initResetButton();
 
     // Initialize Onboarding
     initOnboarding();
@@ -97,19 +120,55 @@ function initToolbar() {
     if (toolbarTrigger && toolbarContainer) {
         toolbarTrigger.addEventListener('click', (e) => {
             e.stopPropagation();
+
+            // Controle de Edição: Liberado para todos inicialmente
+            const canEdit = true; 
+
+            if (!canEdit) {
+                alert("O modo de edição está disponível apenas para o dono do algoritmo ou em modo de simulação.");
+                return;
+            }
+
             const isActive = toolbarContainer.classList.toggle('active');
             document.body.classList.toggle('edit-mode', isActive);
             toggleSortable(isActive);
         });
     }
 
+
+// ... inside initToolbar before the save listener ...
+
     // Save button logic
     const btnSave = document.getElementById('btn-save');
     if (btnSave) {
-        btnSave.addEventListener('click', (e) => {
+        btnSave.addEventListener('click', async (e) => {
             e.stopPropagation();
+            
             // Visual feedback
             btnSave.classList.add('saving');
+
+            // Actual Save to Firestore
+            const currentUser = auth.currentUser;
+            if (currentUser) {
+                try {
+                    const tiles = Array.from(document.querySelectorAll('.tile')).map(t => ({
+                        id: t.id,
+                        size: t.dataset.size || 'normal',
+                        display: t.style.display
+                    }));
+
+                    await setDoc(doc(db, 'users', currentUser.uid, 'config', 'dashboard'), {
+                        tiles: tiles,
+                        updatedAt: serverTimestamp()
+                    });
+                    console.log('Algoritmo salvo na nuvem!');
+                } catch (err) {
+                    console.error("Erro ao salvar no Firestore:", err);
+                }
+            } else {
+                console.log('Salvando localmente (usuário não logado)');
+            }
+
             setTimeout(() => {
                 btnSave.classList.remove('saving');
                 // Close toolbar after saving
@@ -117,9 +176,6 @@ function initToolbar() {
                 document.body.classList.remove('edit-mode');
                 toggleSortable(false);
             }, 800);
-            
-            // Here we could implement actual save logic to localStorage
-            console.log('Algoritmo salvo!');
         });
     }
 
@@ -136,7 +192,7 @@ function initToolbar() {
     if (btnFullscreen) {
         btnFullscreen.addEventListener('click', () => {
             document.body.classList.toggle('mobile-preview-active');
-            
+
             // Adjust canvas/widgets if needed after expansion/compression
             setTimeout(() => {
                 handleResize();
@@ -160,7 +216,7 @@ function initWidgetManager() {
 
             const isActive = btn.classList.toggle('active');
             widget.style.display = isActive ? '' : 'none';
-            
+
             // Re-render because canvas sizes might have changed
             handleResize();
         });
@@ -176,7 +232,7 @@ function initSortable() {
 
     sortableInstance = Sortable.create(grid, {
         animation: 500,
-        easing: "cubic-bezier(0.2, 1, 0.3, 1)", 
+        easing: "cubic-bezier(0.2, 1, 0.3, 1)",
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
         disabled: !document.body.classList.contains('edit-mode'), // Initial state
@@ -211,7 +267,7 @@ function initTileControls() {
 
         e.stopPropagation();
         const tile = btn.closest('.tile');
-        
+
         if (btn.classList.contains('btn-delete')) {
             tile.style.opacity = '0';
             tile.style.transform = 'scale(0.8)';
@@ -229,7 +285,7 @@ function initTileControls() {
             clone.style.transform = 'none';
             tile.after(clone);
             handleResize();
-            initTileExpansion(); 
+            initTileExpansion();
         }
 
         if (btn.classList.contains('btn-resize')) {
@@ -241,7 +297,7 @@ function initTileControls() {
             tile.dataset.size = nextSize;
             tile.classList.remove('size-normal', 'size-wide', 'size-tall', 'size-large');
             tile.classList.add(`size-${nextSize}`);
-            
+
             handleResize();
         }
     });
@@ -288,7 +344,7 @@ function initTileExpansion() {
 
     backBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        
+
         const activeTile = document.querySelector('.active-tile');
         if (activeTile) activeTile.classList.remove('active-tile');
 
@@ -305,13 +361,20 @@ function initOnboarding() {
     const landing = document.getElementById('landing-page');
     const overlay = document.getElementById('onboarding-overlay');
     const startBtns = [document.getElementById('btn-start-landing'), document.getElementById('btn-hero-start')];
-    
+
     if (!landing || !overlay) return;
 
-    // Handle Start
+    // Handle Start Simulation
     startBtns.forEach(btn => {
-        btn?.addEventListener('click', () => {
-            overlay.classList.add('active');
+        btn?.addEventListener('click', (e) => {
+            if (btn.id === 'btn-hero-start') {
+                isSimulation = true;
+                // Auto-skip onboarding for simulation if desired, or just show overlay
+                overlay.classList.add('active');
+            } else {
+                isSimulation = false;
+                overlay.classList.add('active');
+            }
         });
     });
 
@@ -331,7 +394,7 @@ function initOnboarding() {
     const nameInput = document.getElementById('ob-input-name');
     const namePreview = document.getElementById('ob-preview-name');
     const profileName = document.querySelector('.profile-name');
-    
+
     nameInput?.addEventListener('input', (e) => {
         const val = e.target.value || 'Seu Nome';
         if (namePreview) namePreview.textContent = val;
@@ -382,13 +445,13 @@ function initOnboarding() {
         // Apply Widget selection
         const selectedWidgets = Array.from(overlay.querySelectorAll('.widget-opt.selected')).map(opt => opt.dataset.widget);
         const allWidgets = overlay.querySelectorAll('.widget-opt');
-        
+
         // If nothing selected, maybe keep default? Let's hide unselected.
         allWidgets.forEach(opt => {
             const widgetId = opt.dataset.widget;
             const widget = document.getElementById(widgetId);
             const managerBtn = document.querySelector(`.widget-manager-btn[data-widget-id="${widgetId}"]`);
-            
+
             if (widget) {
                 const isSelected = opt.classList.contains('selected');
                 widget.style.display = isSelected ? '' : 'none';
@@ -399,10 +462,10 @@ function initOnboarding() {
         // Hide UI
         overlay.classList.remove('active');
         landing.classList.add('hidden');
-        
+
         // Final resize to fix layout
         setTimeout(() => handleResize(), 1000);
-        
+
         // Save onboarding completed
         localStorage.setItem('owngorithm-onboarding-done', 'true');
         document.body.classList.add('onboarding-done');
@@ -412,8 +475,150 @@ function initOnboarding() {
     if (localStorage.getItem('owngorithm-onboarding-done') === 'true') {
         landing.style.display = 'none';
         document.body.classList.add('onboarding-done');
-    } else {
-        // Just ensure overlay is not active if it was by default in HTML
-        overlay.classList.remove('active');
     }
+}
+
+
+// ---- Authentication UI & Logic ----
+function initAuthUI() {
+    const authOverlay = document.getElementById('auth-modal-overlay');
+    const ethicsOverlay = document.getElementById('ethics-modal-overlay');
+    
+    // Open Login
+    document.getElementById('btn-open-login')?.addEventListener('click', () => {
+        showAuthContent('login');
+        authOverlay.classList.add('active');
+    });
+
+    // Close Modals
+    document.getElementById('btn-close-auth')?.addEventListener('click', () => authOverlay.classList.remove('active'));
+    document.getElementById('btn-close-ethics')?.addEventListener('click', () => ethicsOverlay.classList.remove('active'));
+    document.getElementById('btn-close-ethics-bottom')?.addEventListener('click', () => ethicsOverlay.classList.remove('active'));
+
+    // Switch between Login/Register
+    document.getElementById('link-to-register')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showAuthContent('register');
+    });
+    document.getElementById('link-to-login')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showAuthContent('login');
+    });
+
+    // Ethics Link
+    document.getElementById('link-ethics')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        ethicsOverlay.classList.add('active');
+    });
+
+    // Google Sign In
+    document.getElementById('btn-google-login')?.addEventListener('click', async () => {
+        try {
+            await signInWithGoogle();
+            authOverlay.classList.remove('active');
+            finishOnboardingAction();
+        } catch (e) { alert(e.message); }
+    });
+    document.getElementById('btn-google-register')?.addEventListener('click', async () => {
+        try {
+            await signInWithGoogle();
+            authOverlay.classList.remove('active');
+            finishOnboardingAction();
+        } catch (e) { alert(e.message); }
+    });
+
+    // Email Login
+    document.getElementById('form-login')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-password').value;
+        try {
+            await loginWithEmail(email, pass);
+            authOverlay.classList.remove('active');
+            finishOnboardingAction();
+        } catch (e) { alert(e.message); }
+    });
+
+    // Email Register
+    document.getElementById('form-register')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const pass = document.getElementById('register-password').value;
+        try {
+            await registerWithEmail(email, pass, name);
+            authOverlay.classList.remove('active');
+            finishOnboardingAction();
+        } catch (e) { alert(e.message); }
+    });
+}
+
+function showAuthContent(type) {
+    const loginContent = document.getElementById('auth-login-content');
+    const registerContent = document.getElementById('auth-register-content');
+    if (type === 'login') {
+        loginContent.classList.remove('hidden');
+        registerContent.classList.add('hidden');
+    } else {
+        loginContent.classList.add('hidden');
+        registerContent.classList.remove('hidden');
+    }
+}
+
+function updateUIForAuth(user, profile) {
+    const landing = document.getElementById('landing-page');
+    const profileName = document.querySelector('.profile-name');
+    const profileImg = document.getElementById('profile-img');
+    const sidebar = document.getElementById('profile-sidebar');
+
+    if (user) {
+        // Logged in
+        if (profileName) profileName.textContent = profile?.displayName || user.displayName || 'Usuário';
+        if (profileImg && (profile?.photoURL || user.photoURL)) {
+            profileImg.src = profile?.photoURL || user.photoURL;
+        }
+        
+        // Handle theme if saved
+        if (profile?.theme) {
+            setTheme(profile.theme);
+        }
+
+        // Add Logout button if it doesn't exist
+        if (!document.getElementById('btn-logout')) {
+            const logoutBtn = document.createElement('button');
+            logoutBtn.id = 'btn-logout';
+            logoutBtn.className = 'btn-logout';
+            logoutBtn.textContent = 'Sair da Conta';
+            logoutBtn.addEventListener('click', () => {
+                logout();
+                window.location.reload(); // Simple way to reset state
+            });
+            sidebar?.appendChild(logoutBtn);
+        }
+
+        // Auto-skip landing if logged in
+        landing?.classList.add('hidden');
+        document.body.classList.add('onboarding-done');
+    }
+}
+
+function initResetButton() {
+    const resetBtn = document.getElementById('btn-reset-app');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            if (confirm("Deseja resetar toda a experiência? Isso limpará seus dados locais e voltará para a tela inicial.")) {
+                localStorage.clear();
+                window.location.reload();
+            }
+        });
+    }
+}
+
+function finishOnboardingAction() {
+    isSimulation = false;
+    const landing = document.getElementById('landing-page');
+    landing?.classList.add('hidden');
+    document.body.classList.add('onboarding-done');
+    localStorage.setItem('owngorithm-onboarding-done', 'true');
+    setTimeout(() => handleResize(), 1000);
 }

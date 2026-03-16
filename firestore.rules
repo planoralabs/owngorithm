@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Regra inicial configurada para Produção Segura:
+    // Permite que qualquer usuário autenticado leia e escreva apenas em seus próprios documentos.
+    // O Owngorithm armazenará dados em /users/{userId}/...
+    
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Permite acesso a subcoleções (como snapshots, settings, etc)
+      match /{allSubcollections=**} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // Se você ainda não configurou o Firebase Auth e quer apenas testar agora,
+    // substitua as regras acima por esta (NÃO RECOMENDADO PARA PRODUTOS FINAIS):
+    /*
+    match /{document=**} {
+      allow read, write: if true;
+    }
+    */
+  }
+}
