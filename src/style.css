@@ -1771,13 +1771,17 @@ body.edit-mode .tile-controls {
 }
 
 .widget-label {
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     font-weight: 600;
-    color: var(--body-color);
+    color: var(--subheading);
     text-transform: capitalize;
     text-align: center;
+    transition: color 0.6s ease;
 }
 
+.widget-manager-btn.active .widget-label {
+    color: var(--heading);
+}
 /* ---- NEW SOCIAL TILES ---- */
 /* Borders removed to maintain clean design as requested */
 

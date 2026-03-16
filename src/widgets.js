@@ -12,6 +12,8 @@ import {
     generateHeatmapData,
     focusData,
     intentionData,
+    stravaData,
+    githubData,
 } from './data.js';
 
 // ---- Utility ----
@@ -439,6 +441,63 @@ export function renderBooks() {
 }
 
 
+// ---- Strava (Activity Bars) ----
+export function renderStrava() {
+    const setup = setupCanvas('canvas-strava');
+    if (!setup) return;
+    const { ctx, w, h } = setup;
+
+    const barWidth = 40;
+    const gap = 20;
+    const totalW = stravaData.activities.length * (barWidth + gap) - gap;
+    const offsetX = (w - totalW) / 2;
+    const maxH = h * 0.6;
+    const maxVal = Math.max(...stravaData.activities.map(a => a.distance));
+
+    const color = '#FC4C02'; // Official Strava Orange
+
+    stravaData.activities.forEach((act, i) => {
+        const x = offsetX + i * (barWidth + gap);
+        const barH = (act.distance / maxVal) * maxH;
+        const y = h - 30 - barH;
+
+        ctx.beginPath();
+        ctx.roundRect(x, y, barWidth, barH, 4);
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.8;
+        ctx.fill();
+
+        // Label
+        ctx.save();
+        ctx.font = '600 10px var(--font-sans)';
+        ctx.fillStyle = getComputedThemeColor('--body-color');
+        ctx.textAlign = 'center';
+        ctx.fillText(act.type, x + barWidth/2, h - 10);
+        ctx.restore();
+    });
+}
+
+// ---- GitHub (Repo List) ----
+export function renderGithub() {
+    const container = document.getElementById('github-summary');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <div><strong>${githubData.commits}</strong> <span style="opacity: 0.7;">commits</span></div>
+            <div><strong>${githubData.streak}</strong> <span style="opacity: 0.7;">dias streak</span></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            ${githubData.topRepos.map(repo => `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>${repo.name}</span>
+                    <span style="font-size: 0.75rem; opacity: 0.6;">${repo.commits} commits</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
 // ---- Intention Bar ----
 export function renderIntention() {
     const bar = document.getElementById('intention-bar');
@@ -465,6 +524,8 @@ export function renderAllWidgets() {
     renderIntention();
     renderHeatmap();
     renderFocus();
+    renderStrava();
+    renderGithub();
 }
 
 // Handle resize
@@ -477,6 +538,7 @@ export function handleResize() {
         renderNavigation();
         renderHeatmap();
         renderFocus();
+        renderStrava();
     }, 200);
 }
 // ---- Update YouTube Widget with Real Data ----

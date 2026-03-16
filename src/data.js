@@ -156,3 +156,24 @@ export const mindMapData = {
         { label: 'Fitness', size: 0.28, x: 0.8, y: 0.72 },
     ],
 };
+
+export const stravaData = {
+    totalKm: 42.5,
+    activities: [
+        { type: 'Run', distance: 5.2, date: 'Hoje' },
+        { type: 'Ride', distance: 15.0, date: 'Ontem' },
+        { type: 'Run', distance: 3.5, date: 'Sábado' },
+        { type: 'Ride', distance: 18.8, date: 'Sexta' },
+    ],
+    weeklyTarget: 50,
+};
+
+export const githubData = {
+    commits: 124,
+    topRepos: [
+        { name: 'owngorithm', lang: 'JavaScript', commits: 52 },
+        { name: 'ai-agents-proto', lang: 'Python', commits: 31 },
+        { name: 'design-system', lang: 'CSS', commits: 25 },
+    ],
+    streak: 12
+};
